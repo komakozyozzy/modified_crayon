@@ -1,38 +1,26 @@
 <?php
 include_once "PHPWord.php";
 include_once "../include/php/inspection.php";
+include_once "../include/php/word_template.php";
+/**
 
 $data = new XMLData(11);
 print "<pre>";
 print_r($data->getEquip("Area"));
 print "</pre>";
+**/
 
-die();
 // Create a new PHPWord Object
 $PHPWord = new PHPWord();
+$spccTemplate = new SPCCTemplate();
+
+
 $section = $PHPWord->createSection();
 
+$spccTemplate->createTable($section, array(array('cell one', 'cell_two', 'cell three', 'cell four'),
+                                           array('cell five', 'cell six', 'cell seven')));
 
 
-$table = $section->addTable();
-$table->addRow();
-$cell = $table->addCell(2000);
-$cell->addText('');
-$cell = $table->addCell(2000);
-$cell->addText('');
-$cell = $table->addCell(2000);
-$cell->addText('');
-$cell = $table->addCell(2000);
-$cell->addText('');
-$table->addRow();
-$cell = $table->addCell(2000);
-$cell->addText('');
-$cell = $table->addCell(2000);
-$cell->addText('');
-$cell = $table->addCell(2000);
-$cell->addText('');
-$cell = $table->addCell(2000);
-$cell->addText('');
 
 // At least write the document to webspace:
 
