@@ -21,19 +21,31 @@ class Inspection {
     }
 
     /**
-     *  Returns an simplexml object to be passed back for recursiveness.
+     *
+     *  excepts an equipment name and an xml object if one is searching for a
+     *  nested set of equipment
+     *
+     *  Returns an simplexml object to be passed back
+     *  for recursiveness.
      **/
     public function getEquip($type, $xml=null){
         if(!$xml) $xml = $this->_xml;
         if($type == "Facility"){
-            $this->log->logInfo("Returned from Insepction::getEquipID : ", $rtn);
-            return $xml;
+            $rtn = $xml;
         } else {
-            $this->log->logInfo("Returned from Insepction::getEquipID : ", $rtn);
-            return $xml->xpath("equipment[@type='$type']");
+            $rtn = $xml->xpath("equipment[@type='$type']");
         }
+        $this->log->logInfo("Returned from Insepction::getEquip : ", $rtn);
+        return $rtn;
     }
 
+    /**
+     *
+     * excepts an equipment name and if its not the facilicy a simplexml object
+     *
+     * returns an array of property name as the key and the answered question as
+     * the value
+    **/
     public function getProperties($name, $xml){
         $rtn = array();
         $nm_array = $this->_db->query("SELECT attr.name FROM t_attribute as attr
@@ -50,8 +62,10 @@ class Inspection {
             }
         }
         $this->log->logInfo("Returned from Insepction::getProperties : ", $rtn);
+        return $rtn;
     }
 
+    //used to easily display arrays
     public function debug($array){
         print "<pre>";
         print_r($array);
