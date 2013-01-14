@@ -9,7 +9,7 @@ class Config
     function __construct() {
         //Remeber that the localhost version is in the root not the git folder.
         $this->DOCROOT = $_SERVER['DOCUMENT_ROOT'];
-        $this->ini_array = parse_ini_file($this->DOCROOT."/config.ini", true);
+        $this->ini_array = parse_ini_file($this->DOCROOT."/git/modified_crayon/config.ini", true);
         $this->type = $this->ini_array['enviroment']['type'];
     }
 

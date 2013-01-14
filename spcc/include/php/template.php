@@ -4,8 +4,8 @@ include_once "config.php";
 
 class Template {
     private $url = "include/php/data.php";
-    private $index_url = "http://localhost/WebScientific/spcc/index.php";
-    private $base_url = "http://localhost/WebScientific/spcc/";
+    private $index_url = "http://localhost/git/modified_crayon/spcc/index.php";
+    private $base_url = "http://localhost/git/modified_crayon/spcc/";
 
     function __construct() {
         $config = new Config();
