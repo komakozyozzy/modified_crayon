@@ -1,38 +1,51 @@
 <?php
-include_once "PHPWord.php";
+//include_once "PHPWord.php";
 include_once "../include/php/inspection.php";
-
-$data = new XMLData(11);
+include_once "../include/php/spcc_docx_template.php";
+require_once("../../phpdocx/classes/CreateDocx.inc");
+//$data = new XMLData(11);
 print "<pre>";
-print_r($data->getEquip("Area"));
+//print_r($data->getEquip("Area"));
 print "</pre>";
+//echo 'test';
+//die();
 
-die();
+
+$docx = new CreateDocx();
+$spcc = new spp_docx_template();
+$docx->addTemplate('templates/SPCC.docx');
+$test = $spcc->test();
+$docx->addTemplateVariable('TEST',$test, 'html');
+
+
+$docx->createDocx('templates/SPCC_2'); 
+
+// http://localhost/git/modified_crayon/spcc/word/SPCCDX.php
+
+
+
 // Create a new PHPWord Object
-$PHPWord = new PHPWord();
-$section = $PHPWord->createSection();
+//$PHPWord = new PHPWord();
+//$section = $PHPWord->createSection();
 
+//$styleTable = array('borderColor'=>'000000',
+//			  'borderSize'=>6,
+//			  'cellMargin'=>50);
+//$styleFirstRow = array('bgColor'=>'66BBaa');
+//$PHPWord->addTableStyle('myTable', $styleTable, $styleFirstRow);
+//
+//$table = $section->addTable('myTable');
+//
+//$table->addRow(500);
+//$table->addCell(3000)->addText('Cell 1');
+//$table->addCell(3000)->addText('Cell 2');
+//$table->addCell(2000)->addText('Cell 3');
+//$table->addRow(500);
+//
+//$table->addCell(4000)->addText('Cell 5');
+//$table->addCell(4000)->addText('Cell 6');
+//
 
-
-$table = $section->addTable();
-$table->addRow();
-$cell = $table->addCell(2000);
-$cell->addText('');
-$cell = $table->addCell(2000);
-$cell->addText('');
-$cell = $table->addCell(2000);
-$cell->addText('');
-$cell = $table->addCell(2000);
-$cell->addText('');
-$table->addRow();
-$cell = $table->addCell(2000);
-$cell->addText('');
-$cell = $table->addCell(2000);
-$cell->addText('');
-$cell = $table->addCell(2000);
-$cell->addText('');
-$cell = $table->addCell(2000);
-$cell->addText('');
 
 // At least write the document to webspace:
 
@@ -58,8 +71,8 @@ $myTextElement = $section->addText('Hello World!');
 
 
 
-
-$objWriter = PHPWord_IOFactory::createWriter($PHPWord, 'Word2007');
-$objWriter->save('templates/helloWorldtwo.docx');
+//
+//$objWriter = PHPWord_IOFactory::createWriter($PHPWord, 'Word2007');
+//$objWriter->save('templates/SPCC.docx');
 
 ?>
