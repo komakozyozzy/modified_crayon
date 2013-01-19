@@ -7,7 +7,14 @@ class Inspection {
     private $_docRoot;
     private $_db;
     private $log;
+    private $error;
     public $equip_types = array();
+    /**
+     * There are dynamic instance variables for each object in the database if
+     * the object doesnt exsist in the inspection it will be a blank array
+     * $this->Area or $this->Chemical_Tank
+     * Note: underscores are used for spaces
+     **/
 
     public function __construct($facility_id){
         $this->_db = new Database();
@@ -19,17 +26,37 @@ class Inspection {
         $this->_docRoot = $config->getDataPath();
         $data_path = $this->_db->query("SELECT data_path FROM t_inspection WHERE facility_id = '$facility_id'");
         $this->_xml = simplexml_load_file($this->_docRoot.$data_path[0]['data_path']);
+        //
+
 
         //Get equipment types
         foreach($this->_db->query("SELECT name FROM t_equipment WHERE type = 'inspector'") as $equip){
             $this->equip_types[] = $equip['name'];
         }
-        $this->{"dynamic"} = "yes";
         foreach($this->equip_types as $equip){
             $equip = str_replace(" ", "_", $equip);
             $this->{$equip} = $this->getEquipment($equip);
         }
+        //
 
+
+        //Get sheriff data
+        $props = $this->Facility[0]['props'];
+        $sheriff = array();
+        if(isset($props['facility_county']) && isset($props['facility_state'])){
+            $data = $this->_db->query("SELECT name, phone
+                                       FROM t_sheriff
+                                       WHERE state = '".$props['facility_state']."'
+                                           AND county = '".$props['facility_county']."'");
+            if(count($data) > 0){
+                $sheriff = array('name' => $data[0]['name'], 'phone' => $data[0]['phone']);
+            } else {
+                $this->error[] = "No results from the database for County : ".$props['facility_county']."  State : ".$props['facility_state'];
+            }
+        } else {
+            $this->error[] = "Missing County or State";
+        }
+        $this->{"sheriff"} = $sheriff;
     }
 
     /**
