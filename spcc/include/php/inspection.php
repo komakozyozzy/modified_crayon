@@ -7,16 +7,28 @@ class Inspection {
     private $_docRoot;
     private $_db;
     private $log;
+    public $equip_types = array();
 
     public function __construct($facility_id){
         $this->_db = new Database();
         $config = new Config();
         $this->log = new KLogger($config->getLogSetting("log_path"),
                                  $config->getLogSetting("severity"));
-        print $config->getLogSetting("severity");
+
+        //Get inspection xml
         $this->_docRoot = $config->getDataPath();
         $data_path = $this->_db->query("SELECT data_path FROM t_inspection WHERE facility_id = '$facility_id'");
         $this->_xml = simplexml_load_file($this->_docRoot.$data_path[0]['data_path']);
+
+        //Get equipment types
+        foreach($this->_db->query("SELECT name FROM t_equipment WHERE type = 'inspector'") as $equip){
+            $this->equip_types[] = $equip['name'];
+        }
+        $this->{"dynamic"} = "yes";
+        foreach($this->equip_types as $equip){
+            $equip = str_replace(" ", "_", $equip);
+            $this->{$equip} = $this->getEquipment($equip);
+        }
 
     }
 
@@ -25,8 +37,7 @@ class Inspection {
      *  excepts an equipment name and an xml object if one is searching for a
      *  nested set of equipment
      *
-     *  Returns an simplexml object to be passed back
-     *  for recursiveness.
+     *  Returns an formated array of data
      **/
     private function _getEquipType($type, $xml=null){
         $array = array();
@@ -45,8 +56,8 @@ class Inspection {
             $xpath = $xml->xpath("equipment[@type='$type']");
             foreach($xpath as $path){
                 $array[] = array('parent' => ''.$xml['id'].'',
-                                          'id' => ''.$path['id'].'',
-                                          'props' => $this->_getProperties($type, $path));
+                                 'id' => ''.$path['id'].'',
+                                 'props' => $this->_getProperties($type, $path));
             }
             //$this->debug($array);
         }
@@ -56,9 +67,9 @@ class Inspection {
 
     /**
      *
-     *  excepts an equipment id
+     *  excepts an equipment id, type, and a simple xml object
      *
-     *  Returns an simplexml object
+     *  Returns an formated array of data
      **/
     private function _getEquipId($id, $type, $xml=null){
         if(!$xml) $xml = $this->_xml;
@@ -103,9 +114,12 @@ class Inspection {
 
     /**
      *
+     * This method is a simple interface to work with the above listed method.  Please use this method.
+     *
      * excepts either an id or a type for a piece of equipment
      * returns an array of properites by id
      *
+     * returns :
      * array(array(parent => 0, id => 1, props => array(first => first_value, second => sec_value)),
      *       array(parent => 0, id => 2, props => array(first => first_value, second => sec_value)),)
      **/
