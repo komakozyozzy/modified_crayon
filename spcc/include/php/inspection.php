@@ -9,6 +9,10 @@ class Inspection {
     private $log;
     private $error;
     public $equip_types = array();
+    public $barrels = array('Oklahoma' => '10 barrels',
+                            'Texas' => '5 barrels',
+                            'Wyoming' => '10 barrels',
+                            'Arkansas' => '1 barrel of crude oil or 5 barrels of produced water');
     /**
      * There are dynamic instance variables for each object in the database if
      * the object doesnt exsist in the inspection it will be a blank array
@@ -40,8 +44,11 @@ class Inspection {
         //
 
 
-        //Get sheriff data
+        //Just to reduce the length of the idioms
         $props = $this->Facility[0]['props'];
+
+
+        //Get sheriff data
         $sheriff = array();
         if(isset($props['facility_county']) && isset($props['facility_state'])){
             $data = $this->_db->query("SELECT name, phone
@@ -54,9 +61,31 @@ class Inspection {
                 $this->error[] = "No results from the database for County : ".$props['facility_county']."  State : ".$props['facility_state'];
             }
         } else {
-            $this->error[] = "Missing County or State";
+            $this->error[] = "Missing County or State for Sheriff";
         }
         $this->{"sheriff"} = $sheriff;
+
+
+        //Get data from regulatory_agency table, this data is state specific
+        if(isset($props['facility_state'])){
+            $data = $this->_db->query("SELECT type, name, phone
+                                       FROM t_regulatory_agency
+                                       WHERE state = '".$props['facility_state']."' ");
+            if(count($data) > 0){
+                foreach($data as $dat){
+                    $this->{$dat['type']}  = array('name' => $data[0]['name'], 'phone' => $data[0]['phone']);
+                }
+            } else {
+                $this->error[] = "No results from the database for State : ".$props['facility_state'];
+            }
+        } else {
+            $this->error[] = "Missing State for Department of Eviromental Quality";
+        }
+
+        $this->{"min_barrels"} = (array_key_exists($props['facility_state'], $this->barrels))?$this->barrels[$props['facility_state']]:'';
+        //Print any warnings
+        if(count($this->error) > 0) $this->debug($this->error);
+
     }
 
     /**
