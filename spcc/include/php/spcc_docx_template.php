@@ -1,16 +1,1783 @@
+<!DOCTYPE html>
+<link type="text/css" rel="stylesheet" media="all" href="../css/table.css" />
+</html>
 <?php
 
-
 class spp_docx_template{
+    /*
+     *  Having trouble getting the imported CSS file to show up in the docx, so I am creating all styles here.
+     *  NOTE: The first <td> in the body needs to have style="display:none;". If not, then the first row will be 
+     *  bold and have it's own 'header' template added to it. The purpose of this is to be able to have sub headers 
+     *  in tables. An example is the Potential Discharge Volume tables.
+     *  ALSO: Use td, not th, for the effect of creating a header. The first td in each section will automatically
+     *  be bold and stand out. th has an altogether different effect. This can be modified later, but for now it 
+     *  suites my purpose.
+     */
+    public $htmlclass = '<style>td { border: 1px solid black; align:right; padding-left:8px;}</style><style>th {border: 1px solid black; align:center}</style>';
+    public $css = '<style>
+                            .SPCC_Table {
+                                
+                                margin: 0 auto;padding:0px;
+                                width:100%;
+                                box-shadow: 10px 10px 5px #888888;
+                                border:1px solid #000000;
+                                -moz-border-radius-bottomleft:9px;
+                                -webkit-border-bottom-left-radius:9px;
+                                border-bottom-left-radius:9px;
+                                -moz-border-radius-bottomright:9px;
+                                -webkit-border-bottom-right-radius:9px;
+                                border-bottom-right-radius:9px;
+                                -moz-border-radius-topright:9px;
+                                -webkit-border-top-right-radius:9px;
+                                border-top-right-radius:9px;
+                                -moz-border-radius-topleft:9px;
+                                -webkit-border-top-left-radius:9px;
+                                border-top-left-radius:9px;
+                            }
+                            .SPCC_Table table{
+                                width:100%;
+                                height:100%;
+                                margin: 0 auto;padding:0px;
+                            }
+                            .SPCC_Table tr:last-child td:last-child {
+                                -moz-border-radius-bottomright:9px;
+                                -webkit-border-bottom-right-radius:9px;
+                                border-bottom-right-radius:9px;
+                            }
+                            .SPCC_Table table tr:first-child td:first-child {
+                                -moz-border-radius-topleft:9px;
+                                -webkit-border-top-left-radius:9px;
+                                border-top-left-radius:9px;
+                            }
+                            .SPCC_Table table tr:first-child td:last-child {
+                                -moz-border-radius-topright:9px;
+                                -webkit-border-top-right-radius:9px;
+                                border-top-right-radius:9px;
+                            }
+                            .SPCC_Table tr:last-child td:first-child{
+                                -moz-border-radius-bottomleft:9px;
+                                -webkit-border-bottom-left-radius:9px;
+                                border-bottom-left-radius:9px;
+                            }
+                            .SPCC_Table tr:hover td{
+                                background-color:#82c0ff;
+                                background:-o-linear-gradient(bottom, #82c0ff 5%, #56aaff 100%);	
+                                background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #82c0ff), color-stop(1, #56aaff) );
+                                background:-moz-linear-gradient( center top, #82c0ff 5%, #56aaff 100% );
+                                filter:progid:DXImageTransform.Microsoft.gradient(startColorstr="#82c0ff", endColorstr="#56aaff");	
+                                background: -o-linear-gradient(top,#82c0ff,56aaff);
+                            }
+                            .SPCC_Table tr:first-child td{
+                                background:-o-linear-gradient(bottom, #0069d3 5%, #007fff 100%);	
+                                background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #0069d3), color-stop(1, #007fff) );
+                                background:-moz-linear-gradient( center top, #0069d3 5%, #007fff 100% );
+                                filter:progid:DXImageTransform.Microsoft.gradient(startColorstr="#0069d3", endColorstr="#007fff");	
+                                background: -o-linear-gradient(top,#0069d3,007fff);
+                                background-color:#0069d3;
+                                border:0px solid #000000;
+                                text-align:center;
+                                border-width:0px 0px 1px 1px;
+                                font-size:18px;
+                                font-family:Comic Sans MS;
+                                font-weight:bold;
+                                color:#ffffff;
+                            }
+                            .CSSTableGenerator tr:first-child:hover td{
+                                background:-o-linear-gradient(bottom, #0069d3 5%, #007fff 100%);	
+                                background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #0069d3), color-stop(1, #007fff) );
+                                background:-moz-linear-gradient( center top, #0069d3 5%, #007fff 100% );
+                                filter:progid:DXImageTransform.Microsoft.gradient(startColorstr="#0069d3", endColorstr="#007fff");	
+                                background: -o-linear-gradient(top,#0069d3,007fff);
+                                background-color:#0069d3;
+                            }
+                            .SPCC_Table tr:first-child td:first-child{
+                                border-width:0px 0px 1px 0px;
+                            }
+                            .SPCC_Table tr:first-child td:last-child{
+                                border-width:0px 0px 1px 1px;
+                            }
+                            .SPCC_Table td{
+                                background:-o-linear-gradient(bottom, #56aaff 5%, #82c0ff 100%);	
+                                background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #56aaff), color-stop(1, #82c0ff) ); 
+                                background:-moz-linear-gradient( center top, #56aaff 5%, #82c0ff 100% );
+                                filter:progid:DXImageTransform.Microsoft.gradient(startColorstr="#56aaff", endColorstr="#82c0ff");	
+                                background: -o-linear-gradient(top,#56aaff,82c0ff);
+                                background-color:#56aaff;
+                                border:1px solid #000000;
+                                border-width:0px 1px 1px 0px;
+                                text-align:left;
+                                padding:7px;
+                                font-size:12px;
+                                font-family:Comic Sans MS;
+                                font-weight:bold;
+                                color:#000000;
+                            }
+                            .SPCC_Table tr:last-child td{
+                                border-width:0px 1px 0px 0px;
+                            }
+                            .SPCC_Table tr td:last-child{
+                                border-width:0px 0px 1px 0px;
+                            }
+                            .SPCC_Table tr:last-child td:last-child{
+                                border-width:0px 0px 0px 0px;
+                            }
+                 </style>';
+    public $startdiv = '<div class="SPCC_Table" style="width:800px;">';
+    public $enddiv = '</div>';       
+    public $degreeSymbol = '&deg;';
     
-    
-    function test(){
-        
-        $html = 'test content';
-        
-        return $html;
+    function enableHTML(){
+        return '<html><body>';
     }
     
+    function disableHTML(){
+        return '</body></html>';
+    }
+
+    
+    function operator_information(){
+        // OPERATOR SPECIFIC INFORMATION TABLE
+              
+        $html = $this->css.$this->startdiv.'<table>
+                    <thead>
+                        <tr>
+                            <td colspan="2">
+                                OPERATOR SPECIFIC INFORMATION
+                            </td>
+                                               
+                        <tr>
+                    </thead>
+                    <tbody>
+                    <tr><td style="display:none;"></td><td style="display:none;"></td><tr>
+                        <tr>
+                            <td width="80%">
+                                Owner/Operator (Name Registered with State)
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                State (Location of Owner/Operator\'s Office):
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Operator Number:
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Operator Mailing Address:
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Operator Physical Address:
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Operator Day Phone:
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Business FAX:
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Authorized Representative:
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Title:
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Auth. Rep. Home Address:
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Auth. Rep. 24-Hour/Cell Phone:
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Auth. Rep. Email:
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Field Operations Manager (FOM)
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                FOM Home Address:
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                FOM 24 Hour/Cell Phone:
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Response Coordinator
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                RC Home Address:
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                RC 24 Hour/Cell Phone:
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Does Owner/Operator employ a full time RC?
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Whose work experience will be referred to in plan? [Title]
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Number Years Experience in Oil Production: [# ONLY]
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Where are SPCC plans and reports kept?
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Are there greater than 16 Facilities for this Owner/Operator that Scientific is providing SPCC\'s for?
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                    </tbody>
+                  </table>'.$this->enddiv;
+        return $html;
+        
+    }
+    
+    function facility_data(){
+        
+         $html = $this->css.$this->startdiv.'<table>
+                    <thead>
+                        <tr >
+                            <td colspan="2">
+                                PART II - FACILITY DATA	
+                            </td>
+                                               
+                        <tr>
+                    </thead>
+                    <tbody>
+                    <tr><td style="display:none;"></td><td style="display:none;"></td><tr>
+                        <tr>
+                            <td width="80%">
+                                Facility Name: 
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Type of Facility: Onshore Drilling, Oil Production, Salt Water Disposal, Gas Production, Oil & Gas Production, Workover
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Legal Description:
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                               Lease Permit Number/RRC#:
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                State:  (Facility)
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                               County & State:
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Center of Facility GPS Latitude:
+                            </td>
+                            <td>
+                                N'.$this->degreeSymbol.' Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Center of Facility GPS Longitude:
+                            </td>
+                            <td>
+                                W'.$this->degreeSymbol.' Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                How Many Containment Areas are present on this lease?
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Is this a 24 Hour Monitored Facility:
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Is there an Emergency "Auto Shut-off" in Area 1?
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Loop Emergency Shut off for areas...
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                State Regulatory Agency:
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Rules and Regulations:
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                District Number:
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                District Address:
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                RC Home Address:
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                District Phone:
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Local Emergency Planning Committee (LEPC) Address:
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                LEPC Phone:
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Where are emergency spill materials stored?
+                            </td>
+                            <td>
+                                on the pumper\'s truck
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Who is responsible for checking spill supplies?
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Frequency of Field Operations Inspections:
+                            </td>
+                            <td>
+                                Daily
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Frequency Water Areas Inspected:
+                            </td>
+                            <td>
+                                Annually
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Has facility experienced reportable oil spill 12 months prior to January 10, 1974. If Yes, include Reports to EPA.
+                            </td>
+                            <td>
+                                no
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Who provides pumper services?
+                            </td>
+                            <td>
+                                Pumper
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Frequency of Field Operations Inspections:
+                            </td>
+                            <td>
+                                Pumper\'s / WRM\'s Home Address:  
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Frequency of Field Operations Inspections:
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Pumper\'s / WRM\'s Cell Phone:
+                            </td>
+                            <td>
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Are any tanks field constructed and subject to Brittle Fracture Evaluation?
+                            </td>
+                            <td>
+                                are no
+                            </td>
+                        </tr>
+                    </tbody>
+                  </table>'.$this->enddiv;
+        return $html;
+        
+    }
+    
+    function BLM(){
+        $html = $this->css.$this->startdiv.'<table>
+                    <thead>
+                        <tr>
+                            <td colspan="2">
+                                BLM
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td style="display:none;"></td><td style="display:none;"></td><tr>
+                        <tr>
+                            <td width="80%">
+                                BLM District:  (Wyoming fills in auto.  Colorado must be filled in manually)
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                                BLM Field Office:  (Wyoming fills in auto.  Colorado must be filled in manually)
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                                BLM Field Office Address:   (Wyoming fills in auto.  Colorado must be filled in manually)
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                                BLM Field Office Phone:   (Wyoming fills in auto.  Colorado must be filled in manually)
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                                Additional State Agencies (KS & AR Only):  
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                                District Office:
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                                Additional District Address:
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                                Additional District Phone Number:
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                                District Office (AR):
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                                District Office (AR):
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                                District Office (KS):
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                                District Office (KS):
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                                District Address (AR):
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                                District Address (AR):
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                                District Address (KS):
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                                District Address (KS):
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                                District Phone (AR):
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                                District Phone (AR):
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                                District Phone (KS):
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               District Phone (KS):
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                                EPA Region Number
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                                EPA Region Address
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                                EPA Region Phone
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                                EPA Local Address
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                                EPA Local Phone
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        
+                 </tbody>
+                  </table>'.$this->enddiv;
+        return $html;
+        
+    }
+    
+    function epa_map(){
+        return $this->css.$this->startdiv.'<img src="../include/image/epa.gif">'.$this->enddiv;
+    }
+    
+    function emergency_spill_materials(){
+         $html = $this->css.$this->startdiv.'<table>
+                    <thead>
+                        <tr>
+                            <td colspan="2">
+                                Emergency Spill Materials
+                            </td>
+                        </tr>
+                        
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                Quantity
+                            </td>
+                            <td>
+                                Materials
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50%">
+                                
+                            </td>
+                            <td width="50%">
+                                Salvage Drums & Buckets
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50%">
+                                
+                            </td>
+                            <td width="50%">
+                                Foaming Agents & Fire Suppressants
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50%">
+                                
+                            </td>
+                            <td width="50%">
+                                Hand Tools
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50%">
+                                
+                            </td>
+                            <td width="50%">
+                                Absorbent Materials
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50%">
+                                
+                            </td>
+                            <td width="50%">
+                                Pumps & Hoses
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50%">
+                                
+                            </td>
+                            <td width="50%">
+                                Inflatable Seals
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50%">
+                                
+                            </td>
+                            <td width="50%">
+                                Ropes 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50%">
+                                
+                            </td>
+                            <td width="50%">
+                                Wedges & Plugs
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50%">
+                                
+                            </td>
+                            <td width="50%">
+                                PVS Piping & Fittings - Assorted Sizes
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50%">
+                                
+                            </td>
+                            <td width="50%">
+                                Sand Bags
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50%">
+                                
+                            </td>
+                            <td width="50%">
+                                Decontamination Equipment
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50%">
+                                
+                            </td>
+                            <td width="50%">
+                                Communications Equipment
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50%">
+                                
+                            </td>
+                            <td width="50%">
+                                Portable Breathing Apparatus
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50%">
+                                
+                            </td>
+                            <td width="50%">
+                                Salvage Drums & Buckets
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50%">
+                                
+                            </td>
+                            <td width="50%">
+                                Peat Moss
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50%">
+                                
+                            </td>
+                            <td width="50%">
+                                Vacuum Trucks, Tanker Trucks, Bob Tail
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50%">
+                                
+                            </td>
+                            <td width="50%">
+                                Portable Containment Booms
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50%">
+                                
+                            </td>
+                            <td width="50%">
+                                Boots, Waders, Gloves, Coveralls, Masks
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50%">
+                                
+                            </td>
+                            <td width="50%">
+                                Roll Off Boxes, Frac Tanks, Storage Tanks
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50%">
+                                
+                            </td>
+                            <td width="50%">
+                                Boats, Skiffs, Barges & Rafts
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50%">
+                                
+                            </td>
+                            <td width="50%">
+                                Portable Light Sets
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50%">
+                                
+                            </td>
+                            <td width="50%">
+                                Electric Generators
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50%">
+                                
+                            </td>
+                            <td width="50%">
+                                Plastic Sheeting
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50%">
+                                
+                            </td>
+                            <td width="50%">
+                                Weirs
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50%">
+                                
+                            </td>
+                            <td width="50%">
+                                Booms
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50%">
+                                
+                            </td>
+                            <td width="50%">
+                                Other
+                            </td>
+                        </tr>
+                     </tbody>
+                  </table>'.$this->enddiv;
+        return $html;
+        
+    }
+    
+    function tank_info(){
+        /*
+         *  I am assuming this will depend on the number of tanks/areas that are present
+         *  This function will need to be modified for dynamic table creation.
+         */
+        $html = $this->css.$this->startdiv.'<table>
+                    <thead>
+                        <tr>
+                            <td colspan="6">
+                                Potential Discharge Volume
+                            </td>
+                        </tr>
+                        
+                    </thead>
+                    <tbody>
+                    <tr>
+                            <td width="40%">
+                                Tank Number - Dike Area 1
+                            </td>
+                            <td width="12%">
+                                
+                            </td>
+                             <td width="12%">
+                                
+                            </td>
+                             <td width="12%">
+                               
+                            </td
+                             <td width="12%">
+                                
+                            </td>
+                             <td width="12%">
+                               
+                            </td>
+                            <td width="12%">
+                               
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Use of Tank
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            
+                        </tr>
+                        <tr>
+                            <td>
+                                Geometric Shape of Tank
+                            </td>
+                            <td>
+                                CYLINDER
+                            </td>
+                            <td>
+                                CYLINDER
+                            </td>
+                            <td>
+                                CYLINDER
+                            </td>
+                            <td>
+                                CYLINDER
+                            </td>
+                            <td>
+                                CYLINDER
+                            </td>
+                            
+                        </tr>
+                         <tr>
+                            <td>
+                                Nominal Capacity (bbl)
+                            </td>
+                            <td>
+                                0
+                            </td>
+                            <td>
+                                0
+                            </td>
+                            <td>
+                                0
+                            </td>
+                            <td>
+                                0
+                            </td>
+                            <td>
+                                0
+                            </td>
+                            
+                        </tr>
+                         <tr>
+                            <td>
+                                Nominal Capacity (gallons)
+                            </td>
+                            <td>
+                                0
+                            </td>
+                            <td>
+                                0
+                            </td>
+                            <td>
+                                0
+                            </td>
+                            <td>
+                                0
+                            </td>
+                            <td>
+                                0
+                            </td>
+                            
+                        </tr>
+                         <tr>
+                            <td>
+                                Nominal Diameter (ft.)
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            
+                        </tr>
+                         <tr>
+                            <td>
+                                Nominal Hieght(ft.)
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            
+                        </tr>
+                         <tr>
+                            <td>
+                                Year Manufactured
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            
+                        </tr>
+                         <tr>
+                            <td>
+                                Type 
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            
+                        </tr>
+                         <tr>
+                            <td>
+                                Material 
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            
+                        </tr>
+                         <tr>
+                            <td>
+                                Top 
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            
+                        </tr>
+                         <tr>
+                            <td>
+                                Foundation 
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            
+                        </tr>
+                         <tr>
+                            <td>
+                                Transportation
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            
+                        </tr>
+                         <tr>
+                            <td>
+                                Note if Raised Horizontal
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            
+                        </tr>
+                         <tr>
+                            <td>
+                                Type of Failure
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                
+                            </td>
+                            
+                        </tr>
+                         
+                         <tr>
+                            <td colspan="5" align="right">
+                                Area 1 Total Gallons:
+                            </td>
+                            <td>
+                                0
+                            </td>
+                            
+                        </tr>
+                    </tbody>
+                  </table>'.$this->enddiv;
+        return $html;
+        
+    }
+    
+    function field_agent_inspection(){
+        $html = $this->css.$this->startdiv.'<table>
+                    <thead>
+                        <tr>
+                            <td colspan="2">
+                                Field Agent Inspection
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td style="display:none;"></td><td style="display:none;"></td><tr>
+                        <tr><td style="display:none;"></td><td style="display:none;"></td><tr>
+                        <tr>
+                            <td width="80%">
+                                Lease Name of Facility:
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                                Are there any satellite leases feeding into the main tank battery?  
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                                How Many? (this question will have logic)
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               What is main access road to lease? 
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Composition of lease road: 
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Condition of lease road: (logic)
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Are there any storm drains within 100 yards of this facility? 
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Is there signage at the entrance? 
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Condition of the signage: (logic)
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Is there a gate at the entrance of the Main Facility? Is it open or locked? 
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                                Is it open or locked? (logic)
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Gate Entrance GPS Latitude of Main Facility: 
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Gate Entrance GPS Longitude of Main Facility:
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               DIRECTIONS TO MAIN TANK BATTERY 
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                              Elevation:  
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Digital picture of tank battery:  
+                            </td>
+                            <td width="20%">
+                                INSERT PICTURE ON COVER PAGE 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Is there signage at the tank battery?  
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Condition of signeage: (logic) 
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Is there signage at the wellhead?   
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Condition of signeage: (logic)  
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               For Marinas, Farms, Residential areas…Are there "No Smoking" signs near all fuel storage tanks and dispensers?
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                              Condition of signeage: (logic)   
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                              For Marinas, Farms, Residential areas…Are there fueling instruction signs easily readable at the fuel dispensers?  
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Condition of signeage: (logic)   
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                              For Marinas, Farms, Residential areas…Are there fire extinguishers near the fuel dispensers?  
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Condition of signeage: (logic)  
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Is there H2S Gas Present?  
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                             Is there a sign?  (logic) 
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                              What is the measurement?  (ppms)  (logic)
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                              What were the wind conditions at the time of the H2S measurement?  
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                              Does wellhead have sludge in surrounding area or signs of seepage or leaks?   
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Lease road is what direction from the tank battery?  
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               How is oil production transferred to Buyers? 
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                              How frequently does the oil get hauled off?  (if trucked)  
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                              Current average daily gas production in mcf:  
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                              How is the gas transferred?  
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Current average daily water production in barrels: 
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                                Water Production:
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               SW, FW or PW? 
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Gallons of Salt Water: 
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               How is water transferred? 
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               How frequently does the water get hauled off?  (if trucked); [if injected--N/A] 
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Location & distance from containment area of water injection wellhead/freshwater runoff:  (p. 13) 
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                              What is the rainfall for this county according to Tech. Paper 40? (if it does not auto populate, type over the formula in B103)  
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Are there Catch Basins Present on this lease? 
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        
+                    </tbody>
+                  </table>'.$this->enddiv;
+        return $html;
+    }
 }
 
 ?>

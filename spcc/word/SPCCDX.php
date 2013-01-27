@@ -1,3 +1,6 @@
+<!DOCTYPE html>
+<link type="text/css" rel="stylesheet" media="all" href="../css/table.css" />
+</html>
 <?php
 //include_once "PHPWord.php";
 include_once "../include/php/inspection.php";
@@ -9,70 +12,122 @@ print "<pre>";
 print "</pre>";
 //echo 'test';
 //die();
-
-
-$docx = new CreateDocx();
+/*
+ * Set Development variables for dev environment, or disable for production environment
+ */
+$development = true; // This will display HTML in a browser, vs. needing to open a word doc for every change
 $spcc = new spp_docx_template();
-$docx->addTemplate('templates/SPCC.docx');
-$test = $spcc->test();
-$docx->addTemplateVariable('TEST',$test, 'html');
+
+if (!$development){
+    $docx = new CreateDocx();
+    $docx->addTemplate('templates/TEST.docx');
+}
+/*
+ * Create the instances of the SPCC doc
+ * _____________________________________________________________________________
+ */
+$facility_data = $spcc->facility_data();
+$operator_information = $spcc->operator_information();
+$blm = $spcc->BLM();
+$epa_map = $spcc->epa_map();
+$emergency_spills = $spcc->emergency_spill_materials();
+$tank_info = $spcc->tank_info();
+$fia = $spcc->field_agent_inspection();
 
 
-$docx->createDocx('templates/SPCC_2'); 
+/*
+ * Operator Information
+ * _____________________________________________________________________________
+ */
+if (!$development){ 
+    $docx->addTemplateVariable('OPINFO',$operator_information, 'html');
+}else{
+    echo $operator_information . '<br>';
+    
+}
 
-// http://localhost/git/modified_crayon/spcc/word/SPCCDX.php
+/*
+ * Facility Data
+ * _____________________________________________________________________________
+ */
+if (!$development){ 
+    $docx->addTemplateVariable('FACDATA',$facility_data, 'html');
+    $docx->createDocx('templates/SPCC_3'); 
+}else{
+    echo $facility_data . '<br>';
+    
+}
+
+/*
+ * BLM Information
+ * _____________________________________________________________________________
+ */
+if (!$development){ 
+    $docx->addTemplateVariable('OPINFO',$blm, 'html');
+}else{
+    echo $blm . '<br>';
+    
+}
+
+/*
+ * EPA Map
+ * _____________________________________________________________________________
+ */
+if (!$development){ 
+    $docx->addTemplateVariable('OPINFO',$epa_map, 'html');
+}else{
+    echo $epa_map . '<br>';
+    
+}
+
+/*
+ * Emergency Spills Information
+ * _____________________________________________________________________________
+ */
+if (!$development){ 
+    $docx->addTemplateVariable('OPINFO',$emergency_spills, 'html');
+}else{
+    echo $emergency_spills . '<br>';
+    
+}
+
+/*
+ * Tank Information
+ * _____________________________________________________________________________
+ */
+if (!$development){ 
+    $docx->addTemplateVariable('OPINFO',$tank_info, 'html');
+}else{
+    echo $tank_info . '<br>';
+    
+}
+
+/*
+ * Field Agen Inspection Information
+ * _____________________________________________________________________________
+ */
+if (!$development){ 
+    $docx->addTemplateVariable('OPINFO',$fia, 'html');
+}else{
+    echo $fia . '<br>';
+    
+}
+
+/*
+ * Creaton of the actual Word Doc
+ * _____________________________________________________________________________
+ */
+if (!$development){ 
+    $docx->createDocx('templates/SPCC_3'); 
+}else{
+    echo'<br> This web page is for development. Set $development to false to generate a word doc.'; 
+    
+}
+// Here is what to put in your browser to generate the doc, or run the test environment 
+// http://localhost/git/modified_crayon/spcc/word/SPCCDX.php    
 
 
 
-// Create a new PHPWord Object
-//$PHPWord = new PHPWord();
-//$section = $PHPWord->createSection();
 
-//$styleTable = array('borderColor'=>'000000',
-//			  'borderSize'=>6,
-//			  'cellMargin'=>50);
-//$styleFirstRow = array('bgColor'=>'66BBaa');
-//$PHPWord->addTableStyle('myTable', $styleTable, $styleFirstRow);
-//
-//$table = $section->addTable('myTable');
-//
-//$table->addRow(500);
-//$table->addCell(3000)->addText('Cell 1');
-//$table->addCell(3000)->addText('Cell 2');
-//$table->addCell(2000)->addText('Cell 3');
-//$table->addRow(500);
-//
-//$table->addCell(4000)->addText('Cell 5');
-//$table->addCell(4000)->addText('Cell 6');
-//
-
-
-// At least write the document to webspace:
-
-/**
-// After creating a section, you can append elements:
-$section->addText('Hello world!');
-
-// You can directly style your text by giving the addText function an array:
-$section->addText('Hello world! I am formatted.', array('name'=>'Tahoma', 'size'=>16, 'bold'=>true));
-
-// If you often need the same style again you can create a user defined style to the word document
-// and give the addText function the name of the style:
-$PHPWord->addFontStyle('myOwnStyle', array('name'=>'Verdana', 'size'=>14, 'color'=>'1B2232'));
-$section->addText('Hello world! I am formatted by a user defined style', 'myOwnStyle');
-
-$section = $PHPWord->createSection();
-// You can also putthe appended element to local object an call functions like this:
-$myTextElement = $section->addText('Hello World!');
-//$myTextElement->setBold();
-//$myTextElement->setName('Verdana');
-//$myTextElement->setSize(22);
-**/
-
-
-
-//
-//$objWriter = PHPWord_IOFactory::createWriter($PHPWord, 'Word2007');
-//$objWriter->save('templates/SPCC.docx');
 
 ?>
