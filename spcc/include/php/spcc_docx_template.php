@@ -1770,10 +1770,587 @@ class spp_docx_template{
                                Are there Catch Basins Present on this lease? 
                             </td>
                             <td width="20%">
+                                Logic dictates the next section.
+                            </td>
+                        </tr>
+                        </body>
+                        <thead>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td colspan="2">
+                               Catch Basins 
+                            </td>
+                           
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Area # ...
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Length
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Width
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Height
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Area # ...
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Length
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Width
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Height
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                      </body>
+                        <thead>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td colspan="2">
+                               Other Objects Taking Up Space - Logic if they exist...
+                            </td>
+                           
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Area # ...
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Length
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Width
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Discription
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Area # ...
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Length
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Width
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Discription
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               What is the Geometric Shape of Area ...
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               What is the Geometric Shape of Area ...
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Area Berm Stuff Goes Here...
+                            </td>
+                            <td width="20%">
+                                Don\'t Exactly know what to do here yet...
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Area 1 Berm is constructed of:
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Area 2 Berm is constructed of:
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Are any firewalls present in Area 1?  See Diagram
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Are any firewalls present in Area 2?  See Diagram
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               For Marinas, Farms, Residential areas…is there security fencing around all storage tanks and are all portable tanks locked up when not in use?
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Is containment area 1 fenced?   
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               Is containment area 2 fenced?   
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                               For Marinas, Farms, Residential areas: is there adequate lighting to detect spills at night and to deter vandalism?   
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                              Adjacent Land Usage is:  
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                              INSERT FACILITY DIAGRAM (PG 22) & MAP (PG 23) - outside of table
+                            </td>
+                            
+                        </tr>
+                        <tr>
+                            <td width="80%">
+                              Are there any water areas within 100 yards of this facility (Other than the navigable water listed on the map)?  If yes, where and how far away? 
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              Fire Department Zip Code:  
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              Fire Department Name: 
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              Fire Department Address & Phone Number: 
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              List nearest Navigable Water and distance for:
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              List any buildings within 100 yards of containment area:  
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              What is direction of flow if discharge should occur?
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              Terrain is:   
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              Are there any deviations for containment from SPCC Rules? 
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              Are there any equalization lines between oil and water tanks?  
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              Are loadlines extending beyond containment?  LOGIC FOR NEXT QUESTION
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              If yes, are loadlines equipped with drip buckets that have lids?  
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              Is there containment area beneath loadlines extending beyond containment area?  
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              What materials are flowlines composed of?  
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              Is production treated through a SEP, HT, FWKO or GB? 
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              Are tanks level? 
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              Are ladders in safe condition? 
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              Are the any buried tanks? 
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              List Equipment to be inspected at facility: 
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              Do vessels show signs of corrosion?   
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              List Tanks 
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              Do vessels need painting?
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              List Tanks  
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              Is there a dike drain in Area 1?   
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              Is there a dike drain in Area 2?   
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              Is there a sump pump in Area 1? LOGIC FOR NEXT QUESTION  
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              Is there any standing water with a sheen? 
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              Is there a sump pump in Area 1? LOGIC FOR NEXT QUESTION   
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              Is there any standing water with a sheen?  
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              Are salt water tanks covered with nets?  
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              Are smoke stacks covered with a screen?  
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              Are there trash bins inside of containment area or trash/debris on the ground inside containment?    
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              Are there electric poles inside of containment area?  
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              Is there any foliage (grass, weeds, trees, etc.) inside containment area?  
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              Is there sludge or signs of salt water spills inside or outside of containment?  
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              Are there any breaches in the berm that are need of repair?  
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td colspan="2">
+                              Additional Field Inspection Report Notes  
+                            </td>
+                            
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              Other: 
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              Other: 
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                             Other:  
+                            </td>
+                            <td width="20%">
+                                Data Goes Here
+                            </td>
+                        </tr>
+                         <tr>
+                            <td width="80%">
+                              Other: 
+                            </td>
+                            <td width="20%">
                                 Data Goes Here
                             </td>
                         </tr>
                         
+                     
                     </tbody>
                   </table>'.$this->enddiv;
         return $html;
