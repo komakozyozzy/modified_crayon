@@ -11,12 +11,12 @@ $template = new Template();
 $function = new Functions();
 $db = new Database();
 
-if(empty($_SESSION['logged'])):
-  $template->header();
-  $template->login();
-  $template->footer();
-  die();
-endif;
+if(empty($_SESSION['logged'])){
+    $template->header();
+    $template->login();
+    $template->footer();
+    die();
+}
 
 $template->header();
 
@@ -171,6 +171,5 @@ if(isset($_REQUEST['type'])){
     </form>
 
 <?php
-  endif;
       $template->footer();
 ?>
