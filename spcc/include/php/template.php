@@ -3,15 +3,15 @@ include_once "functions.php";
 include_once "config.php";
 
 class Template {
-    private $url = "include/php/data.php";
-    private $index_url = "http://localhost/git/modified_crayon/spcc/index.php";
-    private $base_url = "http://localhost/git/modified_crayon/spcc/";
+    //private $url = "include/php/data.php";
+    //private $index_url = "http://localhost/git/modified_crayon/spcc/index.php";
+    //private $base_url = "http://localhost/git/modified_crayon/spcc/";
 
     function __construct() {
         $config = new Config();
         $this->url = $config->getTmpSetting("url");
-        $this->url = $config->getTmpSetting("index");
-        $this->url = $config->getTmpSetting("base");
+        $this->index_url = $config->getTmpSetting("index");
+        $this->base_url = $config->getTmpSetting("base");
 
     }
 
@@ -274,8 +274,8 @@ class Template {
         echo '                            <li><a href="'.$this->index_url.'?key=2" accesskey="2" title="">Facilities</a></li>';
         echo '                            <li><a href="'.$this->index_url.'?key=3" accesskey="3" title="">Images</a></li>';
         echo '                            <li><a href="'.$this->index_url.'?key=4" accesskey="4" title="">Inspection Model</a></li>';
-        echo '                            <li><a href="'.$this->index_url.'?key=5" accesskey="4" title="">Process Plan</a></li>';
-        echo '                            <li><a href="'.$this->index_url.'?key=6" accesskey="5" title="">SPCC</a></li>';
+        echo '                            <li><a href="'.$this->index_url.'?key=5" accesskey="5" title="">Process Plan</a></li>';
+        echo '                            <li><a href="'.$this->index_url.'?key=6" accesskey="6" title="">SPCC</a></li>';
         echo '                       </ul>';
         echo '                   </div>';
         echo '               </div>';
@@ -318,7 +318,8 @@ class Template {
       echo '                            <li><a href="'.$this->index_url.'?key=2" accesskey="2" title="">Facilities</a></li>';
       echo '                            <li><a href="'.$this->index_url.'?key=3" accesskey="3" title="">Images</a></li>';
       echo '                            <li><a href="'.$this->index_url.'?key=4" accesskey="4" title="">Inspection Model</a></li>';
-      echo '                            <li><a href="'.$this->index_url.'?key=5" accesskey="5" title="">SPCC</a></li>';
+      echo '                            <li><a href="'.$this->index_url.'?key=5" accesskey="5" title="">Process Plan</a></li>';
+      echo '                            <li><a href="'.$this->index_url.'?key=6" accesskey="6" title="">SPCC</a></li>';
       echo '                       </ul>';
       echo '                   </div>';
       echo '               </div>';
