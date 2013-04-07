@@ -29,9 +29,7 @@ if($_SESSION['logged'] == '' || empty($_SESSION['logged'])){
             }
             break;
         case '1':
-            $template->header();
             $template->createCompany();
-            $template->footer();
             break;
         case '2':
             $template->createFacility();

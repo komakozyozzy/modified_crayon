@@ -155,7 +155,7 @@ gotFacImage = (data) ->
     $('#image').html('</br><input type="file" id="image0" name="file0">');
     $('#facility_id').html('<option value="0"></option>');
     for x in data
-        str = '<option value="'+ x.id +'">'+ x.name +'</option>';
+        str = '<option value="'+x.id+'">'+x.name+'</option>';
         $('#facility_id').append(str);
     $('#mycarousel').jcarousel();
 
@@ -190,7 +190,7 @@ deletedFac = (data) ->
         data =
             'id' : id,
             'type' : 'getImages'
-        myJax data, [gotImages], true
+        myJax data, [gotImages], false
 
 gotImages = (data) ->
     $('#carousel').html('<ul id="mycarousel" class="jcarousel-skin-tango"></ul>')

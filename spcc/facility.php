@@ -13,30 +13,29 @@ $db = new Database();
 //$_SESSION['logged'] = '';
 //$_SESSION['usertype'] = '';
 
-if(empty($_SESSION['logged'])):
+if(empty($_SESSION['logged'])){
   $template->header();
   $template->login();
   $template->footer();
   die();
-endif;
+}
 
 $template->header();
 
-if(isset($_SESSION["logged"])):
-  if ($_REQUEST['type'] == 'addFacility'):
-    if ($_REQUEST['company_id'] > 0):
-      foreach($_REQUEST['facility'] as $key => $value):
-        if($_REQUEST['facility_id'][$key] == 0):
-          $db->findOrInsert('t_facility', array('name' => $value,
-                                                'company_id' => $_REQUEST['company_id']));
-        else:
-          $db->update('t_facility', array('name' =>$value,
-                                          'company_id' => $_REQUEST['company_id']),
-                      array('id' => $_REQUEST['facility_id'][$key]));
-        endif;
-      endforeach;
-    endif;
-  endif;
+if ($_REQUEST['type'] == 'addFacility'){
+    if ($_REQUEST['company_id'] > 0){
+        foreach($_REQUEST['facility'] as $key => $value){
+            if($_REQUEST['facility_id'][$key] == 0){
+                $db->findOrInsert('t_facility', array('name' => $value,
+                                                      'company_id' => $_REQUEST['company_id']));
+            } else{
+                    $db->update('t_facility', array('name' =>$value,
+                                                    'company_id' => $_REQUEST['company_id']),
+                                array('id' => $_REQUEST['facility_id'][$key]));
+                }
+            }
+        }
+    }
 
 ?>
 
@@ -48,7 +47,7 @@ if(isset($_SESSION["logged"])):
               <table>
                 <tr>
                   <td><label for="name" >Select Equipment:  </label></td>
-                  <td><select id="company_id" name="company_id" onchange="getFacilities(this)" ><?php echo $function->getCompanies(); ?></select></td>
+                  <td><select id="company_id" name="company_id" onchange="getFacilities(this)" > <?= $function->getCompanies(); ?> </select></td>
                 </tr>
              </table>
               <table id="facTable">
@@ -65,6 +64,5 @@ if(isset($_SESSION["logged"])):
             </form>
 
 <?php
-endif;
 $template->footer();
 ?>

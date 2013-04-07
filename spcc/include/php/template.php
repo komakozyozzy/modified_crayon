@@ -3,9 +3,6 @@ include_once "functions.php";
 include_once "config.php";
 
 class Template {
-    //private $url = "include/php/data.php";
-    //private $index_url = "http://localhost/git/modified_crayon/spcc/index.php";
-    //private $base_url = "http://localhost/git/modified_crayon/spcc/";
 
     function __construct() {
         $config = new Config();
@@ -37,20 +34,16 @@ class Template {
         ';
     }
     function createProcess() {
-      //header("Location: http://spcc.scientificee.com/model.php");
       header("Location: ".$this->base_url."process.php");
         exit;
     }
 
     function createModel() {
-      //header("Location: http://spcc.scientificee.com/model.php");
       header("Location: ".$this->base_url."model.php");
         exit;
     }
 
     function createSPCC() {
-      //$fun = new Functions();
-        //header("Location: http://localhost/sci/spcc/");
         header("Location: ".$this->base_url."spcc.php");
         exit;
     }
