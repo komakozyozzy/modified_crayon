@@ -41,12 +41,17 @@ function getFacilities($searchParams, $dbconn){
                   <td><select name = "company" ><?php echo $fun->getCompanies() ?></select></td>
                   <td></td>
                 </tr>
+                <tr>
+                  <td><label for="name" >Facility Name :  </label></td>
+                  <td><select name = "facility" ></select></td>
+                  <td></td>
+                </tr>
              </table>
               <input type="submit" name="CreateSPCC" value="Submit" />
 
             </fieldset>
             </form>
-     <?php
+    <?php
 
         if ($_REQUEST['CreateSPCC']):
          // echo '<pre>'; print_r($_REQUEST);

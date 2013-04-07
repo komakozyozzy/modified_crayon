@@ -215,7 +215,7 @@
     $('#facility_id').html('<option value="0"></option>');
     for (_i = 0, _len = data.length; _i < _len; _i++) {
       x = data[_i];
-      str = '<option value="' + x.id(+'">' + x.name(+'</option>'));
+      str = '<option value="' + x.id + '">' + x.name + '</option>';
       $('#facility_id').append(str);
     }
     return $('#mycarousel').jcarousel();
@@ -274,7 +274,7 @@
         'id': id,
         'type': 'getImages'
       };
-      return myJax(data, [gotImages], true);
+      return myJax(data, [gotImages], false);
     }
   };
 

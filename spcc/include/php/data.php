@@ -238,9 +238,6 @@ if($data['type'] == 'createCompany'){
              if(move_uploaded_file($file['tmp_name'], $move_path.$file_name)) {
                $id = $db->findOrInsert('t_image', array('facility_id' => $_POST['facility_id'],
                                                         'data_path' => $url.$file_name));
-               if($id > 0){
-                 $message = "The success";
-               }
              } else{
                $message = "There was an error uploading the file, please try again!";
              }
