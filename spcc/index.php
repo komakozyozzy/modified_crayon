@@ -2,16 +2,6 @@
 session_start();
 
 include_once 'include/php/template.php';
-include_once "include/php/database.php";
-include_once "include/php/klogger.php";
-include_once "include/php/config.php";
-include_once "include/php/inspection.php";
-$insp = new Inspection(11);
-$config = new Config();
-$log = new KLogger($config->getLogSetting("log_path"),
-                   $config->getLogSetting("severity"));
-$db = new Database();
-die();
 
 $template = new Template();
 

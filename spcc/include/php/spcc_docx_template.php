@@ -7,12 +7,12 @@ include_once "spcc_config.php";
 
     // this array can be built in the logic of the inspection tables.
     $deficiency_array = array(''=>'');
-    
-class spp_docx_template{
-   
+
+class spcc_docx_template{
+
     /*
      *  Having trouble getting the imported CSS file to show up in the docx, so I am creating all styles here.
-     */ 
+     */
 
     public $css = '<style>
                             .SPCC_Table {
