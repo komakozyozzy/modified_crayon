@@ -7,7 +7,7 @@ include_once "config.php";
 $data = $_POST;
 //print_r($data);
 
-$config = new Config();
+$config = new ConfigINI();
 $docRoot = $config->getDataPath();
 
 

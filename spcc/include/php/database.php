@@ -14,7 +14,7 @@ class Database
     private $debug_email;
 
     function __construct() {
-        $config = new Config();
+        $config = new ConfigINI();
         $this->host = $config->getDBSetting("host");
         $this->database = $config->getDBSetting("database");
         $this->user = $config->getDBSetting("username");

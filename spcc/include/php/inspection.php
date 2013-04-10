@@ -20,18 +20,32 @@ class Inspection {
      * Note: underscores are used for spaces
      **/
 
-    public function __construct($facility_id){
+    public function __construct($inspection_id){
         $this->_db = new Database();
-        $config = new Config();
+        $config = new ConfigINI();
         $this->log = new KLogger($config->getLogSetting("log_path"),
                                  $config->getLogSetting("severity"));
 
         //Get inspection xml
         $this->_docRoot = $config->getDataPath();
-        $data_path = $this->_db->query("SELECT data_path FROM t_inspection WHERE facility_id = '$facility_id'");
+        $data_path = $this->_db->query("SELECT data_path, facility_id FROM t_inspection WHERE id = '$inspection_id'");
         $this->_xml = simplexml_load_file($this->_docRoot.$data_path[0]['data_path']);
+        $this->{'facility_id'} = $data_path[0]['facility_id'];
+        //
+        
+        //
+        $facNameSql = "SELECT name, company_id FROM t_facility WHERE id = '".$this->facility_id."'";
+        $facility_data = $this->_db->query($facNameSql);
+        $this->{'Facility_Name'} = $facility_data[0]['name'];
+        
+        //Get Company Data
+        $this->_getCompanyData($facility_data[0]['company_id']);
         //
 
+        //Get images
+        $imgSql = "SELECT data_path FROM t_image WHERE facility_id = '".$this->facility_id."'";
+        $this->{'images'} = array_map(function($_){return $_['data_path'];}, $this->_db->query($imgSql));
+        //
 
         //Get equipment types
         foreach($this->_db->query("SELECT name FROM t_equipment WHERE type = 'inspector'") as $equip){
@@ -87,7 +101,33 @@ class Inspection {
         if(count($this->error) > 0) $this->debug($this->error);
 
     }
-
+   /**
+     *
+     *  excepts an equipment name and an xml object if one is searching for a
+     *  nested set of equipment
+     *
+     *  Returns an formated array of data
+     **/
+    private function _getCompanyData($company_id){
+        $sql = "select name as Company_Name,
+                    p_addr.address_1 as Company_Address,
+                    p_city.city as Company_City,
+                    p_state.state as Company_State
+                from t_company as comp
+                left join t_address as m_addr 
+                    on m_address_id = m_addr.id
+                left join t_address as p_addr
+                    on p_address_id = p_addr.id
+                left join t_city as p_city
+                    on p_addr.city_id = p_city.id
+                left join t_state as p_state
+                    on p_addr.state_id = p_state.id
+                where comp.id = '$company_id'";
+        $data = $this->_db->query($sql);
+        foreach($data[0] as $k=>$d){
+            $this->{$k} = $d;
+        }
+    }
     /**
      *
      *  excepts an equipment name and an xml object if one is searching for a

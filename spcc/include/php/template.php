@@ -5,7 +5,7 @@ include_once "config.php";
 class Template {
 
     function __construct() {
-        $config = new Config();
+        $config = new ConfigINI();
         $this->url = $config->getTmpSetting("url");
         $this->index_url = $config->getTmpSetting("index");
         $this->base_url = $config->getTmpSetting("base");

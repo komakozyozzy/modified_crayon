@@ -1,6 +1,6 @@
 <?php
 
-class Config
+class ConfigINI
 {
     private $ini_array;
     private $type;

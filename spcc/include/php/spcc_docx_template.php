@@ -133,14 +133,32 @@ class spcc_docx_template{
         $html .= '</tbody></table>';
         return $html;
     }
-    
+    /*
+     *  PREPARED FOR
+     *  Parameters: company data
+     */
+    public function prepared_for($data){
+         $html = $this->css.'<table class="SPCC_Table">
+                                                <thead>
+                                                    <tr>
+                                                       <th style="text-align:center" colspan="2">
+                                                          FACILITY LOCATION
+                                                       </th>
+                                                    </tr>
+                                                </thead>
+                                              <tbody>';
+            $html .= '<tr>
+                          <td width="80%">'.$text.'</td>
+                          <td width="20%">'.$info[$field].'</td>
+        return $html;
+    }
     
     /*
      *  BERM TABLE CALCULATIONS
      *  Parameters: Area/Vessel Information
      */
     public function berm_calc_table(){
-        
+        return;
     }
     
     /*
@@ -148,8 +166,10 @@ class spcc_docx_template{
      * Parameters: Area/Vessel Information
      */
     public function vessel_table(){
-        
+        return;
     }
-    
+    public function facility_image($image_path){
+        return '<img src="/modified_crayon/spcc/'.$image_path.'"/>';
+    }
 }
 ?>
