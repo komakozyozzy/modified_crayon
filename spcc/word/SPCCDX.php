@@ -17,7 +17,7 @@ global $dbconn;
 $facID = 11;
 $insp = new Inspection($facID);
 //$insp->debug();
-//$insp->debug($insp);
+//$insp->debug($insp->Vessel);
 //die();
 
 //$blah = $insp->getEquipment('Vessel', $insp->Vessel[0]['id']);
@@ -29,13 +29,17 @@ $inspectionData = $insp->Facility;
 /*
  * Set Development variables for dev environment, or disable for production environment
  */
-$development = false; // This will display HTML in a browser, vs. needing to open a word doc for every change
+$development = true; // This will display HTML in a browser, vs. needing to open a word doc for every change
 $spcc = new spcc_docx_template();
-
+//$insp->debug($insp->Vessel);
+$insp->debug($spcc->vessel_table($insp->Vessel));
+die();
 
 if (!$development){
     $docx = new CreateDocx();
     $docx->addTemplate('templates/SPCC.docx');
+} else {
+    $docx = null;
 }
 /*
  * Create the instances of the SPCC doc.
@@ -54,6 +58,10 @@ development($docx, $development, 'LEASE', $insp->Facility_Name, "text");
 development($docx, $development, 'LAT', $insp->Facility[0]['props']['latitude'], "text");
 //Longitude
 development($docx, $development, 'LON', $insp->Facility[0]['props']['longitude'], "text");
+//Prepared For
+development($docx, $development, 'PREPARED_FOR', $spcc->prepared_for(array()), "html");
+//Vessel Table
+development($docx, $development, 'PREPARED_FOR', $spcc->prepared_for(array()), "html");
 /* Creaton of the actual Word Doc
  * _____________________________________________________________________________
  */

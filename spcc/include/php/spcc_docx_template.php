@@ -3,6 +3,7 @@
 include_once "functions.php";
 include_once "dbconn.php";
 include_once "spcc_config.php";
+include_once "../include/php/HTMLHelper.php";
 
 
     // this array can be built in the logic of the inspection tables.
@@ -137,19 +138,21 @@ class spcc_docx_template{
      *  PREPARED FOR
      *  Parameters: company data
      */
-    public function prepared_for($data){
-         $html = $this->css.'<table class="SPCC_Table">
-                                                <thead>
-                                                    <tr>
-                                                       <th style="text-align:center" colspan="2">
-                                                          FACILITY LOCATION
-                                                       </th>
-                                                    </tr>
-                                                </thead>
-                                              <tbody>';
-            $html .= '<tr>
-                          <td width="80%">'.$text.'</td>
-                          <td width="20%">'.$info[$field].'</td>
+    public function prepared_for($data) {
+        $h = new HTMLHelper();
+        $style = array('style' => 'text-align:center');
+        $class = array('class' => 'SPCC_Table');
+        $html =  $h->tag('div',
+                    $h->tag('table',
+                      $h->tag('thead', 
+                        $h->tag('tr', 
+                          $h->tag('th', 'Prepared For',$style))) .
+                      $h->tag('tbody', 
+                        $h->tag('tr',$h->tag('td', 'this is an name')).
+                        $h->tag('tr',$h->tag('td', 'this is an address')).
+                        $h->tag('tr',$h->tag('td', 'this is an phone'))
+                      ), $class), $style);
+
         return $html;
     }
     
@@ -158,6 +161,7 @@ class spcc_docx_template{
      *  Parameters: Area/Vessel Information
      */
     public function berm_calc_table(){
+        
         return;
     }
     
@@ -165,8 +169,35 @@ class spcc_docx_template{
      * VESSEL TABLES(S)
      * Parameters: Area/Vessel Information
      */
-    public function vessel_table(){
-        return;
+    public function vessel_table($data){
+        $h = new HTMLHelper();
+        
+        foreach($this->getVesselRow($data) as $head => $row){
+            $h->tag(, $inner)
+                    
+            $h->tag('table', $table);
+        }
+        
+ 
+    }
+    private function getVesselRow($data){
+        $row = array();
+        $hdrs = array('Tank Number', 'Use of tank','Nominal Capacity (bbl)',
+                    'Nominal Capacity (gallons)','Direction of Flow',
+                    'Nominal Diameter (ft.)', 'Nominal Height (ft.)','Type',
+                    'Material','Top','Foundation','Transportation');
+
+        foreach($hdrs as $h){ 
+            $row[$h] = array();
+            foreach($data as $vessel){
+                if(array_key_exists($vessel['parent'], $row[$h])){
+                    $row[$h][$vessel['parent']][] = $vessel['props']['use'];
+                } else {
+                    $row[$h][$vessel['parent']] = array($vessel['props']['use']);
+                }
+            }
+        }
+        return $row;
     }
     public function facility_image($image_path){
         return '<img src="/modified_crayon/spcc/'.$image_path.'"/>';
