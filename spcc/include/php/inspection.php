@@ -1,6 +1,7 @@
 <?php
 include_once "database.php";
 include_once "config.php";
+include_once "calculations.php";
 
 class Inspection {
     private $_xml;
@@ -23,6 +24,7 @@ class Inspection {
     public function __construct($inspection_id){
         $this->_db = new Database();
         $config = new ConfigINI();
+        $calc = new Calculation();
         $this->log = new KLogger($config->getLogSetting("log_path"),
                                  $config->getLogSetting("severity"));
 
@@ -56,8 +58,21 @@ class Inspection {
             $this->{$equip} = $this->getEquipment($equip);
         }
         //
-
-
+        $cnt = 1;
+        foreach($this->Area as &$area){
+            $area['props']['areaNum'] = $cnt++;
+        }
+        
+        $cnt = 0;
+        foreach($this->Vessel as &$vessel){
+            $vessel['props']['num_bbl'] = $calc->nominal_capacity($vessel['props']['diameter'], 
+                                                                  $vessel['props']['height']);
+            $vessel['props']['numGal'] = ($calc->nominal_capacity($vessel['props']['diameter'], 
+                                                                 $vessel['props']['height'])) /32;
+            $vessel['props']['flow'] = $this->Facility[0]['props']['direction_flow'];
+            $vessel['props']['tankNum'] = $cnt++;
+        }
+        
         //Just to reduce the length of the idioms
         $props = $this->Facility[0]['props'];
 
@@ -112,16 +127,35 @@ class Inspection {
         $sql = "select name as Company_Name,
                     p_addr.address_1 as Company_Address,
                     p_city.city as Company_City,
-                    p_state.state as Company_State
+                    p_state.state as Company_State,
+                    p_zip.zipcode as Company_Zipcode
+                    m_addr.address_1 as Company_Mail_Address,
+                    m_city.city as Company_Mail_City,
+                    m_state.state as Company_Mail_State,
+                    m_zip.zipcode as Company_Mail__MailZipcode
+                    phone.area_code as Company_Area_Code,
+                    phone.prefix as Company_Prefix,
+                    phone.sufix as Company_Sufix,
+                    p_zip.zipcode as Company_Zipcode
                 from t_company as comp
                 left join t_address as m_addr 
                     on m_address_id = m_addr.id
+                left join t_city as m_city
+                    on m_addr.city_id = m_city.id
+                left join t_state as m_state
+                    on m_addr.state_id = m_state.id
+                left join t_zipcode as m_zip
+                    on m_addr.zipcode_id = m_zip.id
                 left join t_address as p_addr
                     on p_address_id = p_addr.id
                 left join t_city as p_city
                     on p_addr.city_id = p_city.id
                 left join t_state as p_state
                     on p_addr.state_id = p_state.id
+                left join t_zipcode as p_zip
+                    on p_addr.zipcode_id = p_zip.id
+                left join t_phone as phone
+                    on comp.phone_id = phone.id
                 where comp.id = '$company_id'";
         $data = $this->_db->query($sql);
         foreach($data[0] as $k=>$d){
@@ -191,6 +225,8 @@ class Inspection {
     **/
     private function _getProperties($name, $xml){
         $rtn = array();
+        //todo the equip needs to be an in statement matching the piece of equipment
+        //whether its processor or inspector
         $nm_array = $this->_db->query("SELECT attr.name FROM t_attribute as attr
                                       INNER JOIN t_equipment as equip
                                       ON attr.equipment_id = equip.id

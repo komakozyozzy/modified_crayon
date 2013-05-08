@@ -30,10 +30,8 @@ $inspectionData = $insp->Facility;
  * Set Development variables for dev environment, or disable for production environment
  */
 $development = true; // This will display HTML in a browser, vs. needing to open a word doc for every change
-$spcc = new spcc_docx_template();
-//$insp->debug($insp->Vessel);
-$insp->debug($spcc->vessel_table($insp->Vessel));
-die();
+$spcc = new spcc_docx_template($insp);
+
 
 if (!$development){
     $docx = new CreateDocx();
@@ -50,18 +48,59 @@ if (!$development){
 development($docx, $development, 'FIR', $spcc->fir($inspectionData));
 //Facility Image 
 development($docx, $development, 'IMAGE1', $insp->images[0], 'image');
-//Company Name
-development($docx, $development, 'COMPANY', $insp->Company_Name, "text");
-//Facility Name
-development($docx, $development, 'LEASE', $insp->Facility_Name, "text");
-//Latitude
-development($docx, $development, 'LAT', $insp->Facility[0]['props']['latitude'], "text");
-//Longitude
-development($docx, $development, 'LON', $insp->Facility[0]['props']['longitude'], "text");
+$fp = $insp->Facility[0]['props'];
+$p_address = $insp->Company_Address.' '.$insp->Company_City.', '.$insp->Company_State.' '.$insp->Company_Zipcode;
+$m_address= $insp->Company_Mail_Address.' '.$insp->Company_Mail_City.', '.$insp->Company_Mail_State.' '.$insp->Company_Mail_Zipcode;
+/**
+ * todo: get the dateoo or date of inspection
+ */
+
+$variables = array('COMPANY' => $insp->Company_Name, 
+                   'LEASE' => $insp->Facility_Name,
+                   'LAT' => $fp['latitude'], 
+                   'LON' => $fp['longitude'],
+                   'FAC_TYPE' => 'Onshore '.$fp['facility_type'].' Facility',
+                   'COUNTY' => $fp['facility_county'],
+                   'STATE' => $fp['facility_state'],
+                   'OWNER_ADDRESS' => $p_address,
+                   'MAILING_ADDRESS' => $m_address,
+                   'PHYSICAL_ADDRESS' => $p_address,
+                   'PRES_PHONE' => $fp['AR-phone'],
+                   'FOM_PHONE' => $fp['FOM_phone'],
+                   'RC_PHONE' => $fp['RC_phone'],
+                   'PUMPER_PHONE' => $fp['pumper_phone'],
+                   'PRES_ADDR' => $fp['AR_home_address'],
+                   'FOM_ADDR' => $fp['FOM_home_address'],
+                   'RC_ADDR' => $fp['RC_address'],
+                   'PUMPER_ADDR' => $fp['pumper_address'],
+                   'PRESIDENT' => $fp['AR_name'],
+                   'FOM' => $fp['RC_name'],
+                   'RC' => $fp['FOM_name'],
+                   'PUMPER' => $fp['pumper_name'],
+                   'LEASE_ROAD' => $fp['main_road'],
+                   'OB' => $fp['oil_production'],
+                   'SB' => $fp['sw_production'],
+                   'OG' => ($fp['oil_production'] * 32),
+                   'SG' => ($fp['water_production'] * 32),
+                   'TG' => (($fp['oil_production'] + $fp['water_production'])*32),
+                   'HT' => $fp['is_heater'],
+                   'OIL_PROD_ANS' => $fp['oil_transfer'],
+                   'GAS_PROD_ANS' => $fp['gas_transfer'],
+                   'SW_PROD_ANS' => $fp['water_transfer'],
+                   'SW_PROD_ANS' => $fp['nav_water']);
+foreach($variables as $index => $value){
+    development($docx, $development, $index, $value, "text");
+}
 //Prepared For
-development($docx, $development, 'PREPARED_FOR', $spcc->prepared_for(array()), "html");
+$company = array('Company_Name' => $insp->Company_Name, 'Company_Address' => $insp->Company_Address, 
+        'Company_City' => $insp->Company_City, 'Company_State' => $insp->Company_State,
+        'Company_Zipcode' => $insp->Company_Zipcode, 'Company_Area_Code' => $insp->Company_Area_Code, 
+        'Company_Prefix' => $insp->Company_Prefix, 'Company_Sufix' => $insp->Company_Sufix, 
+        'Facility_Name' => $insp->Facility_Name, 'Facility_Type' => $fp['facility_type'], 
+        'Legal_Desc' => $fp['legal_desc']);
+development($docx, $development, 'PREPARED_FOR', $spcc->prepared_for($company), "html");
 //Vessel Table
-development($docx, $development, 'PREPARED_FOR', $spcc->prepared_for(array()), "html");
+development($docx, $development, 'VESSEL_TABLE', $spcc->vessel_table($insp->Vessel, $insp->Area), "html");
 /* Creaton of the actual Word Doc
  * _____________________________________________________________________________
  */

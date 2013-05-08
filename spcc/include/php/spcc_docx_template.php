@@ -6,15 +6,17 @@ include_once "spcc_config.php";
 include_once "../include/php/HTMLHelper.php";
 
 
-    // this array can be built in the logic of the inspection tables.
-    $deficiency_array = array(''=>'');
+// this array can be built in the logic of the inspection tables.
+$deficiency_array = array(''=>'');
+
 
 class spcc_docx_template{
-
-    /*
-     *  Having trouble getting the imported CSS file to show up in the docx, so I am creating all styles here.
-     */
-
+    private $hdrs = array('tankNum' => 'Tank Number', 'use' => 'Use of tank',
+              'num_bbl' => 'Nominal Capacity (bbl)', 'numGal' => 'Nominal Capacity (gallons)',
+              'flow' => 'Direction of Flow', 'diameter' => 'Nominal Diameter (ft.)', 
+              'height' => 'Nominal Height (ft.)', 'type' => 'Type',
+              'material' => 'Material', 'top' => 'Top', 'foundation' => 'Foundation',
+              'transportation' => 'Transportation');
     public $css = '<style>
                             .SPCC_Table {
                                 margin: 0 auto;
@@ -46,8 +48,7 @@ class spcc_docx_template{
 
     // this array can be built in the logic of the inspection tables.
     public $deficiency_array = array(''=>'');
-
-   /*
+    /*
     * Each table in the FIR will go in this function, since they are all sort of
     * jumbled in the same constant table in the PDF example I have. This way, 
     * they will page break if they need to. ALl of this is done with the idea of 
@@ -139,20 +140,27 @@ class spcc_docx_template{
      *  Parameters: company data
      */
     public function prepared_for($data) {
+        $comp_addr = $data['Company_Address'].' '.$data['Company_City'].', '.
+                    $data['Company_State'].' '.$data['Company_Zipcode'];
+        $comp_phone = ''.$data['Company_Area_Code'].''.$data['Company_Prefix'].
+                    ''.$data['Company_Sufix'];
+        $facType = 'Onshore '.$data['Facility_Type'].' Facility';
         $h = new HTMLHelper();
         $style = array('style' => 'text-align:center');
         $class = array('class' => 'SPCC_Table');
-        $html =  $h->tag('div',
+        $html =  $h->tag('div', $this->css . 
                     $h->tag('table',
                       $h->tag('thead', 
                         $h->tag('tr', 
                           $h->tag('th', 'Prepared For',$style))) .
                       $h->tag('tbody', 
-                        $h->tag('tr',$h->tag('td', 'this is an name')).
-                        $h->tag('tr',$h->tag('td', 'this is an address')).
-                        $h->tag('tr',$h->tag('td', 'this is an phone'))
+                        $h->tag('tr',$h->tag('td', $data['Company_Name'])).
+                        $h->tag('tr',$h->tag('td', $comp_addr)).
+                        $h->tag('tr',$h->tag('td', $comp_phone)) .
+                        $h->tag('tr',$h->tag('td', $h->tag('b',$data['Facility_Name']))) .
+                        $h->tag('tr',$h->tag('td', $data['Facility_Name'])) .
+                        $h->tag('tr',$h->tag('td', $facType))
                       ), $class), $style);
-
         return $html;
     }
     
@@ -161,7 +169,6 @@ class spcc_docx_template{
      *  Parameters: Area/Vessel Information
      */
     public function berm_calc_table(){
-        
         return;
     }
     
@@ -169,31 +176,76 @@ class spcc_docx_template{
      * VESSEL TABLES(S)
      * Parameters: Area/Vessel Information
      */
-    public function vessel_table($data){
+    public function vessel_table($data, $aData){
         $h = new HTMLHelper();
-        
-        foreach($this->getVesselRow($data) as $head => $row){
-            $h->tag(, $inner)
-                    
-            $h->tag('table', $table);
+        $html = '';
+        foreach($this->_vessel_table($data) as $area => $table){
+            $area = explode('-', $area);
+            $aNum = 0;
+            foreach($aData as $a){
+                if($a['id'] == $area[0]){
+                    $aNum = $a['props']['areaNum'];
+                }
+            }
+            $txt =  'Table 3-1.'.($area[1]-1).': Potential discharge volume - Area '.$aNum;
+            $html .= $h->tag('b', $txt);
+            $html .= $this->css;
+            $html .= $h->tag('table', implode('', $table), array('class' => 'SPCC_Table'));
         }
-        
- 
+        return $html;
     }
-    private function getVesselRow($data){
-        $row = array();
-        $hdrs = array('Tank Number', 'Use of tank','Nominal Capacity (bbl)',
-                    'Nominal Capacity (gallons)','Direction of Flow',
-                    'Nominal Diameter (ft.)', 'Nominal Height (ft.)','Type',
-                    'Material','Top','Foundation','Transportation');
 
-        foreach($hdrs as $h){ 
+    private function _vessel_table($data){
+        $h = new HTMLHelper();
+        $htmlRows = array();
+        $cnt = 0;
+        $x = 0;
+        $th = array('width' => '100px;');
+        $td = array('width' => '100px;');
+        $rows = $this->sortVesselData($data);
+        foreach ($rows as $head => $row) {
+            foreach ($row as $areaNumber => $area) {
+                $htmlRow = $h->tag('th', $head);
+                $i = 0;
+                foreach ($area as $vessel) {
+                    $i++;
+                    $htmlRow .= $h->tag((($i == 0)?'th':'td'), $vessel, $td);
+                    if (($i % 5) == 0 && count($area) > $i) {
+                        if (empty($htmlRows[$areaNumber.'-'.$cnt])) {
+                            $htmlRows[$areaNumber.'-'.$cnt] = array($h->tag('tr', $htmlRow));
+                        } else {
+                            $htmlRows[$areaNumber.'-'.$cnt][] = $h->tag('tr', $htmlRow);
+                        }
+                        $cnt ++;
+                        $htmlRow = $h->tag('th', $head);
+                    }                   
+                }
+                if (empty($htmlRows[$areaNumber.'-'.$cnt])) {
+                    $htmlRows[$areaNumber.'-'.$cnt] = array($h->tag('tr', $htmlRow));
+                } else {
+                    $htmlRows[$areaNumber.'-'.$cnt][] =  $h->tag('tr', $htmlRow);
+                }
+                $cnt ++;
+                $x = 1;
+            }
+            $cnt = 0;
+        }
+        return $htmlRows;
+    }
+    
+    
+    
+    private function sortVesselData($data){
+        $row = array();
+
+        foreach($this->hdrs as $p => $h){ 
             $row[$h] = array();
             foreach($data as $vessel){
+                $prop = (isset($vessel['props'][$p]))?$vessel['props'][$p]:'';
                 if(array_key_exists($vessel['parent'], $row[$h])){
-                    $row[$h][$vessel['parent']][] = $vessel['props']['use'];
+                    $row[$h][$vessel['parent']][] = $prop;
                 } else {
-                    $row[$h][$vessel['parent']] = array($vessel['props']['use']);
+                    $row[$h][$vessel['parent']] = array($prop);
                 }
             }
         }
