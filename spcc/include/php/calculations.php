@@ -77,7 +77,7 @@ class Calculation {
 	
     public function calculate_vessel_area($dia, $hieght, $width = null, $shape = null){
 	
-        $v = $this->nominal_capasity($dia, $hieght, $width);
+        $v = $this->nominal_capacity($dia, $hieght, $width);
 	       	
         if ($shape == "Rectangle" || $width > 0 ){
             $k = round($dia * $width);
@@ -85,10 +85,10 @@ class Calculation {
         $k = round(($dia/2*$dia/2*3.1416));
         }
 		
-        if($v > $this->largest_vessel_capasity){
+        if($v > $this->largest_vessel_capacity){
             $this->largest_vessel_hieght = $hieght;
             $this->largest_vessel_area = $k;
-            $this->largest_vessel_capasity = $v;
+            $this->largest_vessel_capacity = $v;
         }
 		
         $this->vessel_area_volume += $k;

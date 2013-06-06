@@ -2,6 +2,7 @@
 include_once "database.php";
 include_once "config.php";
 include_once "calculations.php";
+include_once "calculations.php";
 
 class Inspection {
     private $_xml;
@@ -54,15 +55,13 @@ class Inspection {
             $this->equip_types[] = $equip['name'];
         }
         foreach($this->equip_types as $equip){
-            $equip = str_replace(" ", "_", $equip);
-            $this->{$equip} = $this->getEquipment($equip);
+            $this->{str_replace(" ", "_", $equip)} = $this->getEquipment($equip);
         }
         //
         $cnt = 1;
-        foreach($this->Area as &$area){
-            $area['props']['areaNum'] = $cnt++;
+        foreach($this->Area as &$a_ref){
+            $a_ref['props']['areaNum'] = $cnt++;
         }
-        
         $cnt = 0;
         foreach($this->Vessel as &$vessel){
             $vessel['props']['num_bbl'] = $calc->nominal_capacity($vessel['props']['diameter'], 
@@ -114,9 +113,64 @@ class Inspection {
         $this->{"min_barrels"} = (array_key_exists($props['facility_state'], $this->barrels))?$this->barrels[$props['facility_state']]:'';
         //Print any warnings
         if(count($this->error) > 0) $this->debug($this->error);
+        
+        $calc = array();
+        //Calculate Area Attributes
+        foreach($this->Area as $area){
+            $calc[$area['id']] = new Calculation();
+            $calc[$area['id']]->rain_fall = $props['rainfall'];
+            $a_props = $area['props'];
+            $calc[$area['id']]->add_area_volume($a_props['shape'], 
+                                                $a_props['length'],
+                                                $a_props['width']);
+            $calc[$area['id']]->add_area_volume($a_props['shape_one'], 
+                                                $a_props['length_one'],
+                                                $a_props['width_one']);
+            $calc[$area['id']]->add_area_volume($a_props['shape_two'], 
+                                                $a_props['length_two'],
+                                                $a_props['width_two']);
+            $calc[$area['id']]->add_area_volume($a_props['shape_three'], 
+                                                $a_props['length_three'],
+                                                $a_props['width_three']);
+            $calc[$area['id']]->add_area_volume($a_props['shape_four'], 
+                                                $a_props['length_four'],
+                                                $a_props['width_four']);
+        }
+
+        //Caculate Vessel Attributes
+        foreach ($this->Vessel as $vessel) {
+            $v_props = $vessel['props'];
+            $calc[$vessel['parent']]->set_production_value($v_props['type'], 
+                                                           $props['oil_production'], 
+                                                           $props['water_production']);
+            $calc[$vessel['parent']]->calculate_vessel_area($v_props['diameter'], 
+                                                            $v_props['height']);
+        }
+        //Caculate Catch Basin Attribute
+        foreach ($this->Catch_Basin as $cb) {
+            $cb_props = $cb['props'];
+            $calc[$cb['parent']]->add_catch_basin_volume($cb_props['length'], 
+                                                         $cb_props['width'],   
+                                                         $cb_props['depth']);
+        }
+        
+        //Caculate Catch Basin Attribute
+        foreach ($this->Object_Taking_Up_Space as $object) {
+            $o_props = $object['props'];
+            $calc[$object['parent']]->add_object_volume($o_props['length'], 
+                                                        $o_props['width']);
+        }
+        $this->{'calc'} = $calc;
+                
+
+        foreach($this->calc as $c){
+            $c->berm_calc();
+        }
 
     }
-   /**
+   
+
+    /**
      *
      *  excepts an equipment name and an xml object if one is searching for a
      *  nested set of equipment
@@ -128,11 +182,11 @@ class Inspection {
                     p_addr.address_1 as Company_Address,
                     p_city.city as Company_City,
                     p_state.state as Company_State,
-                    p_zip.zipcode as Company_Zipcode
+                    p_zip.zipcode as Company_Zipcode,
                     m_addr.address_1 as Company_Mail_Address,
                     m_city.city as Company_Mail_City,
                     m_state.state as Company_Mail_State,
-                    m_zip.zipcode as Company_Mail__MailZipcode
+                    m_zip.zipcode as Company_Mail_Zipcode,
                     phone.area_code as Company_Area_Code,
                     phone.prefix as Company_Prefix,
                     phone.sufix as Company_Sufix,
@@ -185,6 +239,7 @@ class Inspection {
             }
             $xpath = $xml->xpath("equipment[@type='$type']");
             foreach($xpath as $path){
+                //$this->debug($path);
                 $array[] = array('parent' => ''.$xml['id'].'',
                                  'id' => ''.$path['id'].'',
                                  'props' => $this->_getProperties($type, $path));
