@@ -1,4 +1,11 @@
 <?php
+
+/**
+ * @todo  Need the army of engineer data
+ * @todo  Need the LEPC and EPA reg data
+ * @todo  Need to work on the last part of the berm calc with Mekay
+ */
+
 function development($docx, $dev, $var, $replace, $type='html') {
     if (!$dev) {
         $docx->addTemplateVariable($var, $replace, $type);
@@ -80,6 +87,7 @@ $variables = array('COMPANY' => $insp->Company_Name,
                    'PUMPER' => $fp['pumper_name'],
                    'LEASE_ROAD' => $fp['main_road'],
                    'LEASE_RD_CONST' => $fp['road_comp'],
+                   'FLOWLINE_CONST'=> $fp['flowlines_comp``'],
                    'AREA_NUM' => $a_num[((count($insp->Area)<11)? 
                                             count($insp->Area):"NUMBER TO HIGH")],
                    'OB' => $fp['oil_production'],
@@ -93,31 +101,111 @@ $variables = array('COMPANY' => $insp->Company_Name,
                    'SW_PROD_ANS' => $fp['water_transfered'],
                    'SW_PROD_ANS' => $fp['nav_water'],
                    'PROD_EQUIP' => $fp['prod_equip'],
-                   'ENGINEER_NOTES' => $fp['engineer_notes']);
+                   'ENGINEER_NOTES' => $fp['engineer_notes'],
+                   'BHDHE_COMPANY' => $fp['dozer_company'],
+                   'BDHE_PHONE' => $fp['dozer_phone'],
+                   'VTTFT_COMPANY' => $fp['vac_company'],
+                   'VTTFT_PHONE' => $fp['vac_phone'],
+                   'RC_CREW' => $fp['roust_company'],
+                   'RC_CREW_PHONE' => $fp['roust_phone'],
+                   'SHERIFF' => $insp->sheriff['name'],
+                   'SHERIFF_PHONE' => $insp->sheriff['phone'],
+                   'DEPT_EQ' => $insp->deq['name'],
+                   'DEPT_EQ_PHONE' => $insp->deq['phone'],
+                   'DWC' => $insp->dept_wild_life['name'],
+                   'DWC_PHONE' => $insp->dept_wild_life['phone'],
+                   'FIRE_MARSHAL' => $insp->fire_marshal['name'],
+                   'FIRE_MARSHAL_PHONE' => $insp->fire_marshal['phone'],
+                   'HYPO' => $insp->state_police['name'],
+                   'HYPO_PHONE' => $insp->state_police['phone'],
+                   'ARMY' => 'Dont Have',
+                   'ARMY_PHONE' => 'Dont Have',
+                   'WRB' => $insp->water_resouce['name'],
+                   'WRB_PHONE' => $insp->water_resouce['phone'],
+);
 
 foreach($variables as $index => $value){
-    development($docx, $development, $index, $value, "text");
+    development(
+    	$docx, 
+    	$development, 
+    	$index, 
+    	$value, 
+    	"text"
+	);
 }
 //Prepared For
-$company = array('Company_Name' => $insp->Company_Name, 'Company_Address' => $insp->Company_Address, 
-        'Company_City' => $insp->Company_City, 'Company_State' => $insp->Company_State,
-        'Company_Zipcode' => $insp->Company_Zipcode, 'Company_Area_Code' => $insp->Company_Area_Code, 
-        'Company_Prefix' => $insp->Company_Prefix, 'Company_Sufix' => $insp->Company_Sufix, 
-        'Facility_Name' => $insp->Facility_Name, 'Facility_Type' => $fp['facility_type'], 
-        'Legal_Desc' => $fp['legal_desc']);
-development($docx, $development, 'PREPARED_FOR', $spcc->prepared_for($company), "html");
+$company = array(
+	'Company_Name' => $insp->Company_Name, 
+	'Company_Address' => $insp->Company_Address, 
+    'Company_City' => $insp->Company_City, 
+    'Company_State' => $insp->Company_State,
+    'Company_Zipcode' => $insp->Company_Zipcode, 
+    'Company_Area_Code' => $insp->Company_Area_Code, 
+    'Company_Prefix' => $insp->Company_Prefix, 
+    'Company_Sufix' => $insp->Company_Sufix, 
+    'Facility_Name' => $insp->Facility_Name, 
+    'Facility_Type' => $fp['facility_type'], 
+    'Legal_Desc' => $fp['legal_desc']
+);
+//Prepared For Table
+development(
+	$docx, 
+	$development, 
+	'PREPARED_FOR', 
+	$spcc->prepared_for($company), 
+	"html"
+);
 //Vessel Table
-development($docx, $development, 'VESSEL_TABLE', $spcc->vessel_table($insp->Vessel, $insp->Area), "html");
+development(
+	$docx, 
+	$development, 
+	'VESSEL_TABLE', 
+	$spcc->vessel_table(
+		$insp->Vessel, 
+		$insp->Area
+	), 
+	"html"
+);
 //Area Statement
-development($docx, $development, 'AREA_STATEMENT', $spcc->area_statement($insp->calc, $insp->Area), "html");
+development(
+	$docx, 
+	$development, 
+	'AREA_STATEMENT', 
+	$spcc->area_statement(
+		$insp->calc, 
+		$insp->Area
+	), 
+	"html"
+);
 //Chemical Table
-development($docx, $development, 'CHEMICAL_TANK_TABLE', $spcc->chemical_table($insp->Chemical_Tank), "html");
+development($docx, 
+			$development, 
+			'CHEMICAL_TANK_TABLE', 
+			$spcc->chemical_table(
+				$insp->Chemical_Tank
+			), 
+			"html"
+);
 //Berm Calc Table
 development(
         $docx, 
         $development, 
         'BERM_TABLE', 
         $spcc->berm_calc_table(
+                $insp->Area, 
+                $insp->Vessel,
+                $insp->Catch_Basin,
+                $insp->Object_Taking_Up_Space,
+                $insp->calc
+        ), 
+        "html"
+);
+//Vessel Inspection Table
+development(
+        $docx, 
+        $development, 
+        'TANK_INSPECTION_TABLE', 
+        $spcc->vessel_inspection_table(
                 $insp->Area, 
                 $insp->Vessel,
                 $insp->Catch_Basin,

@@ -11,7 +11,11 @@ include_once "../include/php/HTMLHelper.php";
 $deficiency_array = array('' => '');
 
 class spcc_docx_template {
-
+	/**
+	 * @author Nicholas Smith
+	 * 
+	 * @todo Get all the data for the vessel inpection table
+	 */
     private $hdrs = array('tankNum' => 'Tank Number', 'use' => 'Use of tank',
         'num_bbl' => 'Nominal Capacity (bbl)', 'numGal' => 'Nominal Capacity (gallons)',
         'flow' => 'Direction of Flow', 'diameter' => 'Nominal Diameter (ft.)',
@@ -195,7 +199,7 @@ class spcc_docx_template {
         $h = new HTMLHelper();
 		$cnt = 0;
         //creates the seperate tables for the berm calc
-        $html = $this->css.implode(array_map(function($area) use ($vessels, $cb, $objects, $h, $calc, &$cnt) {
+       	return $this->css.implode(array_map(function($area) use ($vessels, $cb, $objects, $h, $calc, &$cnt) {
         	$html = "<p>Table 3-2.$cnt: Berm capacity calculations - 40 CFR Part 112.7(c) & 112.7(a)(3)(iii)</p>";
 			$cnt += 1;
             $html .= $h->tag('table',
@@ -225,9 +229,6 @@ class spcc_docx_template {
 					);
 			return $html;
         }, $areas));
-        print $html;
-        die();
-        return;
     }
     private function get_vessel_area_table($vessels, $areaId, $calc){
         $h = new HTMLHelper();
@@ -489,7 +490,51 @@ class spcc_docx_template {
     public function facility_image($image_path) {
         return '<img src="/modified_crayon/spcc/' . $image_path . '"/>';
     }
-
+	
+	public function vessel_inspection_table($areas, $vessels){
+		$h = new HTMLHelper();
+		
+		print $this->css.implode(
+			array_map(
+				function($area) use ($h, $vessels){
+					$pId = $area['id'];
+					$cb_filter = function($vessel) use ($pId){
+						return ($vessel['parent'] == $pId)? True : False;
+					};
+					return $h->tag(
+						'table',
+						$h->tag('tr', 
+							$h->tag('th', 'Area '.$area['props']['areaNum'].' Tank', 
+								array('width'=>'10%')
+							) .
+							$h->tag('th', 'Year Built') .
+							$h->tag('th', 'Last Inspection Date') .
+							$h->tag('th', 'Condition') .
+							$h->tag('th', 'Next Inspection By')
+						) . implode(
+							array_map(
+								function($vessel) use ($h){
+									return $h->tag('tr', 
+										$h->tag('td', $vessel['props']['tankNum']) . 
+										$h->tag('td', $vessel['props']['yr_manufactured']) . 
+										$h->tag('td', '') . 
+										$h->tag('td', '') . 
+										$h->tag('td', '')
+									);
+									
+								}, array_filter($vessels, $cb_filter)
+							)
+						),
+						array(
+            				'style' => 'width:80%;',
+                			'class' => 'SPCC_Table'
+            			)
+					);
+				},$areas
+			)
+		);
+		die();
+	}
 }
 
 ?>
