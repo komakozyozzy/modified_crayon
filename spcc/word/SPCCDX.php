@@ -29,7 +29,7 @@ $inspectionData = $insp->Facility;
 /*
  * Set Development variables for dev environment, or disable for production environment
  */
-$development = true; // This will display HTML in a browser, vs. needing to open a word doc for every change
+$development = false; // This will display HTML in a browser, vs. needing to open a word doc for every change
 $spcc = new spcc_docx_template($insp);
 
 
@@ -47,13 +47,14 @@ if (!$development){
 //Facility Location
 development($docx, $development, 'FIR', $spcc->fir($inspectionData));
 //Facility Image 
-development($docx, $development, 'IMAGE1', $insp->images[0], 'image');
+//development($docx, $development, 'IMAGE1', $insp->images[0], 'image');
 $fp = $insp->Facility[0]['props'];
 $p_address = $insp->Company_Address.' '.$insp->Company_City.', '.$insp->Company_State.' '.$insp->Company_Zipcode;
 $m_address= $insp->Company_Mail_Address.' '.$insp->Company_Mail_City.', '.$insp->Company_Mail_State.' '.$insp->Company_Mail_Zipcode;
-/**
- * todo: get the dateoo or date of inspection
- */
+$a_num = array('one (1)','two (2)','three (3)', 'four (4)','five (5)',
+        'six (6)','seven (7)','eight (8)', 'nine (9)', 'ten (10)');
+$og = ($fp['oil_production'] * 32);
+$sg = ($fp['water_production'] * 32);
 
 $variables = array('COMPANY' => $insp->Company_Name, 
                    'LEASE' => $insp->Facility_Name,
@@ -78,16 +79,22 @@ $variables = array('COMPANY' => $insp->Company_Name,
                    'RC' => $fp['FOM_name'],
                    'PUMPER' => $fp['pumper_name'],
                    'LEASE_ROAD' => $fp['main_road'],
+                   'LEASE_RD_CONST' => $fp['road_comp'],
+                   'AREA_NUM' => $a_num[((count($insp->Area)<11)? 
+                                            count($insp->Area):"NUMBER TO HIGH")],
                    'OB' => $fp['oil_production'],
-                   'SB' => $fp['sw_production'],
-                   'OG' => ($fp['oil_production'] * 32),
-                   'SG' => ($fp['water_production'] * 32),
-                   'TG' => (($fp['oil_production'] + $fp['water_production'])*32),
+                   'SB' => $fp['water_production'],
+                   'OG' => sprintf("%d", ($fp['oil_production']*32)),
+                   'SG' => sprintf("%d", ($fp['water_production']*32)),
+                   'TG' => sprintf("%d", (($fp['oil_production'] + $fp['water_production'])*32)),
                    'HT' => $fp['is_heater'],
                    'OIL_PROD_ANS' => $fp['oil_transfer'],
                    'GAS_PROD_ANS' => $fp['gas_transfer'],
-                   'SW_PROD_ANS' => $fp['water_transfer'],
-                   'SW_PROD_ANS' => $fp['nav_water']);
+                   'SW_PROD_ANS' => $fp['water_transfered'],
+                   'SW_PROD_ANS' => $fp['nav_water'],
+                   'PROD_EQUIP' => $fp['prod_equip'],
+                   'ENGINEER_NOTES' => $fp['engineer_notes']);
+
 foreach($variables as $index => $value){
     development($docx, $development, $index, $value, "text");
 }
@@ -101,6 +108,24 @@ $company = array('Company_Name' => $insp->Company_Name, 'Company_Address' => $in
 development($docx, $development, 'PREPARED_FOR', $spcc->prepared_for($company), "html");
 //Vessel Table
 development($docx, $development, 'VESSEL_TABLE', $spcc->vessel_table($insp->Vessel, $insp->Area), "html");
+//Area Statement
+development($docx, $development, 'AREA_STATEMENT', $spcc->area_statement($insp->calc, $insp->Area), "html");
+//Chemical Table
+development($docx, $development, 'CHEMICAL_TANK_TABLE', $spcc->chemical_table($insp->Chemical_Tank), "html");
+//Berm Calc Table
+development(
+        $docx, 
+        $development, 
+        'BERM_TABLE', 
+        $spcc->berm_calc_table(
+                $insp->Area, 
+                $insp->Vessel,
+                $insp->Catch_Basin,
+                $insp->Object_Taking_Up_Space,
+                $insp->calc
+        ), 
+        "html"
+);
 /* Creaton of the actual Word Doc
  * _____________________________________________________________________________
  */

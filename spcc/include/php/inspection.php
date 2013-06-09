@@ -2,7 +2,7 @@
 include_once "database.php";
 include_once "config.php";
 include_once "calculations.php";
-include_once "calculations.php";
+
 
 class Inspection {
     private $_xml;
