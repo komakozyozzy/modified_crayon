@@ -47,7 +47,11 @@ class Inspection {
 
         //Get images
         $imgSql = "SELECT data_path FROM t_image WHERE facility_id = '".$this->facility_id."'";
-        $this->{'images'} = array_map(function($_){return $_['data_path'];}, $this->_db->query($imgSql));
+        $this->{'images'} = array_map(
+        	function($_){
+        		return '../'.$_['data_path'];
+        	}, $this->_db->query($imgSql)
+		);
         //
 
         //Get equipment types
@@ -93,7 +97,32 @@ class Inspection {
         }
         $this->{"sheriff"} = $sheriff;
 
-
+		//Get fire department data
+		$fire_dept = array(
+			'name'=>'',
+			'addr_one'=>'', 
+			'addr_city'=>'', 
+			'addr_state'=>'', 
+			'addr_zip'=>'', 
+			'phone'=>''
+		);
+		if($props['fire_zip'] != ''){
+			$data = $this->_db->query("SELECT name, addr_one, addr_city, addr_state, addr_zip, phone
+   			                           FROM t_fire_dept
+                                       WHERE addr_zip = '".$props['fire_zip']."' ");
+			if(count($data) > 0){
+				$fire_dept = array(
+					'name'=> $data[0]['name'],
+					'addr_one'=> $data[0]['addr_one'], 
+					'addr_city'=> $data[0]['addr_city'], 
+					'addr_state'=> $data[0]['addr_state'], 
+					'addr_zip'=> $data[0]['addr_zip'], 
+					'phone'=> $data[0]['phone']
+				);
+			}
+		}
+		$this->{"fire_dept"} = $fire_dept;
+		
         //Get data from regulatory_agency table, this data is state specific
         if(isset($props['facility_state'])){
             $data = $this->_db->query("SELECT type, name, phone

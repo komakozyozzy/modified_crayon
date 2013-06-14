@@ -122,6 +122,13 @@ $variables = array('COMPANY' => $insp->Company_Name,
                    'ARMY_PHONE' => 'Dont Have',
                    'WRB' => $insp->water_resouce['name'],
                    'WRB_PHONE' => $insp->water_resouce['phone'],
+                   'GATE_LOCK' => $fp['entrance_locked'],
+                   'FIRE_DEPT' => $insp->fire_dept['name'],
+                   'FIRE_ADDR_1' => $insp->fire_dept['addr_one'], 
+                   'FIRE_ADDR_2' => $insp->fire_dept['addr_city'].", ".
+                   		$insp->fire_dept['addr_state']." ".
+                   		$insp->fire_dept['addr_zip'],
+                   'FIRE_PHONE' => $insp->fire_dept['phone']
 );
 
 foreach($variables as $index => $value){
