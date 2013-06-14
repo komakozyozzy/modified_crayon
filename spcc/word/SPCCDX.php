@@ -20,7 +20,7 @@ include_once "../include/php/spcc_docx_template.php";
 require_once("../../phpdocx/classes/CreateDocx.inc");
 include_once "../include/php/functions.php";
 include_once "../include/php/dbconn.php";
-global $dbconn;
+
 $facID = 11;
 $insp = new Inspection($facID);
 //$insp->debug();
@@ -87,7 +87,7 @@ $variables = array('COMPANY' => $insp->Company_Name,
                    'PUMPER' => $fp['pumper_name'],
                    'LEASE_ROAD' => $fp['main_road'],
                    'LEASE_RD_CONST' => $fp['road_comp'],
-                   'FLOWLINE_CONST'=> $fp['flowlines_comp``'],
+                   'FLOWLINE_CONST'=> $fp['flowlines_comp'],
                    'AREA_NUM' => $a_num[((count($insp->Area)<11)? 
                                             count($insp->Area):"NUMBER TO HIGH")],
                    'OB' => $fp['oil_production'],
@@ -102,11 +102,11 @@ $variables = array('COMPANY' => $insp->Company_Name,
                    'SW_PROD_ANS' => $fp['nav_water'],
                    'PROD_EQUIP' => $fp['prod_equip'],
                    'ENGINEER_NOTES' => $fp['engineer_notes'],
-                   'BHDHE_COMPANY' => $fp['dozer_company'],
+                   'BHDHE_COMPANY' => $fp['dozer_name'],
                    'BDHE_PHONE' => $fp['dozer_phone'],
-                   'VTTFT_COMPANY' => $fp['vac_company'],
+                   'VTTFT_COMPANY' => $fp['vac_name'],
                    'VTTFT_PHONE' => $fp['vac_phone'],
-                   'RC_CREW' => $fp['roust_company'],
+                   'RC_CREW' => $fp['roust_name'],
                    'RC_CREW_PHONE' => $fp['roust_phone'],
                    'SHERIFF' => $insp->sheriff['name'],
                    'SHERIFF_PHONE' => $insp->sheriff['phone'],

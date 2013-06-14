@@ -487,14 +487,11 @@ class spcc_docx_template {
         return $row;
     }
 
-    public function facility_image($image_path) {
-        return '<img src="/modified_crayon/spcc/' . $image_path . '"/>';
-    }
 	
 	public function vessel_inspection_table($areas, $vessels){
 		$h = new HTMLHelper();
 		
-		print $this->css.implode(
+		return $this->css.implode(
 			array_map(
 				function($area) use ($h, $vessels){
 					$pId = $area['id'];
@@ -533,7 +530,6 @@ class spcc_docx_template {
 				},$areas
 			)
 		);
-		die();
 	}
 }
 
