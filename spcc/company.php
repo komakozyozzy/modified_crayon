@@ -20,8 +20,8 @@ if(empty($_SESSION['logged'])){
 
 $template->header();
 
-if(isset($_REQUEST['type'])){
-  if($data['type'] == 'createCompany'){
+if(isset($_POST['type'])){
+  if($_POST['type'] == 'createCompany'){
     $db = new Database();
 
     $name = $_POST['name'];
