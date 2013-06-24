@@ -54,7 +54,8 @@ if (!$development){
 //Facility Location
 development($docx, $development, 'FIR', $spcc->fir($inspectionData));
 //Facility Image 
-//development($docx, $development, 'IMAGE1', $insp->images[0], 'image');
+development($docx, $development, 'IMAGE1', $insp->images[0], 'image');
+
 $fp = $insp->Facility[0]['props'];
 $p_address = $insp->Company_Address.' '.$insp->Company_City.', '.$insp->Company_State.' '.$insp->Company_Zipcode;
 $m_address= $insp->Company_Mail_Address.' '.$insp->Company_Mail_City.', '.$insp->Company_Mail_State.' '.$insp->Company_Mail_Zipcode;
