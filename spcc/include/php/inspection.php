@@ -35,12 +35,12 @@ class Inspection {
         $this->_xml = simplexml_load_file($this->_docRoot.$data_path[0]['data_path']);
         $this->{'facility_id'} = $data_path[0]['facility_id'];
         //
-        
+
         //
         $facNameSql = "SELECT name, company_id FROM t_facility WHERE id = '".$this->facility_id."'";
         $facility_data = $this->_db->query($facNameSql);
         $this->{'Facility_Name'} = $facility_data[0]['name'];
-        
+
         //Get Company Data
         $this->_getCompanyData($facility_data[0]['company_id']);
         //
@@ -48,10 +48,10 @@ class Inspection {
         //Get images
         $imgSql = "SELECT data_path FROM t_image WHERE facility_id = '".$this->facility_id."'";
         $this->{'images'} = array_map(
-        	function($_){
-        		return '../'.$_['data_path'];
-        	}, $this->_db->query($imgSql)
-		);
+            function($_){
+                return '../'.$_['data_path'];
+            }, $this->_db->query($imgSql)
+        );
         //
 
         //Get equipment types
@@ -68,14 +68,14 @@ class Inspection {
         }
         $cnt = 0;
         foreach($this->Vessel as &$vessel){
-            $vessel['props']['num_bbl'] = $calc->nominal_capacity($vessel['props']['diameter'], 
+            $vessel['props']['num_bbl'] = $calc->nominal_capacity($vessel['props']['diameter'],
                                                                   $vessel['props']['height']);
-            $vessel['props']['numGal'] = ($calc->nominal_capacity($vessel['props']['diameter'], 
+            $vessel['props']['numGal'] = ($calc->nominal_capacity($vessel['props']['diameter'],
                                                                  $vessel['props']['height'])) /32;
             $vessel['props']['flow'] = $this->Facility[0]['props']['direction_flow'];
             $vessel['props']['tankNum'] = $cnt++;
         }
-        
+
         //Just to reduce the length of the idioms
         $props = $this->Facility[0]['props'];
 
@@ -97,32 +97,32 @@ class Inspection {
         }
         $this->{"sheriff"} = $sheriff;
 
-		//Get fire department data
-		$fire_dept = array(
-			'name'=>'',
-			'addr_one'=>'', 
-			'addr_city'=>'', 
-			'addr_state'=>'', 
-			'addr_zip'=>'', 
-			'phone'=>''
-		);
-		if($props['fire_zip'] != ''){
-			$data = $this->_db->query("SELECT name, addr_one, addr_city, addr_state, addr_zip, phone
-   			                           FROM t_fire_dept
+        //Get fire department data
+        $fire_dept = array(
+            'name'=>'',
+            'addr_one'=>'',
+            'addr_city'=>'',
+            'addr_state'=>'',
+            'addr_zip'=>'',
+            'phone'=>''
+        );
+        if($props['fire_zip'] != ''){
+            $data = $this->_db->query("SELECT name, addr_one, addr_city, addr_state, addr_zip, phone
+                                           FROM t_fire_dept
                                        WHERE addr_zip = '".$props['fire_zip']."' ");
-			if(count($data) > 0){
-				$fire_dept = array(
-					'name'=> $data[0]['name'],
-					'addr_one'=> $data[0]['addr_one'], 
-					'addr_city'=> $data[0]['addr_city'], 
-					'addr_state'=> $data[0]['addr_state'], 
-					'addr_zip'=> $data[0]['addr_zip'], 
-					'phone'=> $data[0]['phone']
-				);
-			}
-		}
-		$this->{"fire_dept"} = $fire_dept;
-		
+            if(count($data) > 0){
+                $fire_dept = array(
+                    'name'=> $data[0]['name'],
+                    'addr_one'=> $data[0]['addr_one'],
+                    'addr_city'=> $data[0]['addr_city'],
+                    'addr_state'=> $data[0]['addr_state'],
+                    'addr_zip'=> $data[0]['addr_zip'],
+                    'phone'=> $data[0]['phone']
+                );
+            }
+        }
+        $this->{"fire_dept"} = $fire_dept;
+
         //Get data from regulatory_agency table, this data is state specific
         if(isset($props['facility_state'])){
             $data = $this->_db->query("SELECT type, name, phone
@@ -142,26 +142,26 @@ class Inspection {
         $this->{"min_barrels"} = (array_key_exists($props['facility_state'], $this->barrels))?$this->barrels[$props['facility_state']]:'';
         //Print any warnings
         if(count($this->error) > 0) $this->debug($this->error);
-        
+
         $calc = array();
         //Calculate Area Attributes
         foreach($this->Area as $area){
             $calc[$area['id']] = new Calculation();
             $calc[$area['id']]->rain_fall = $props['rainfall'];
             $a_props = $area['props'];
-            $calc[$area['id']]->add_area_volume($a_props['shape'], 
+            $calc[$area['id']]->add_area_volume($a_props['shape'],
                                                 $a_props['length'],
                                                 $a_props['width']);
-            $calc[$area['id']]->add_area_volume($a_props['shape_one'], 
+            $calc[$area['id']]->add_area_volume($a_props['shape_one'],
                                                 $a_props['length_one'],
                                                 $a_props['width_one']);
-            $calc[$area['id']]->add_area_volume($a_props['shape_two'], 
+            $calc[$area['id']]->add_area_volume($a_props['shape_two'],
                                                 $a_props['length_two'],
                                                 $a_props['width_two']);
-            $calc[$area['id']]->add_area_volume($a_props['shape_three'], 
+            $calc[$area['id']]->add_area_volume($a_props['shape_three'],
                                                 $a_props['length_three'],
                                                 $a_props['width_three']);
-            $calc[$area['id']]->add_area_volume($a_props['shape_four'], 
+            $calc[$area['id']]->add_area_volume($a_props['shape_four'],
                                                 $a_props['length_four'],
                                                 $a_props['width_four']);
         }
@@ -169,35 +169,35 @@ class Inspection {
         //Caculate Vessel Attributes
         foreach ($this->Vessel as $vessel) {
             $v_props = $vessel['props'];
-            $calc[$vessel['parent']]->set_production_value($v_props['type'], 
-                                                           $props['oil_production'], 
+            $calc[$vessel['parent']]->set_production_value($v_props['type'],
+                                                           $props['oil_production'],
                                                            $props['water_production']);
-            $calc[$vessel['parent']]->calculate_vessel_area($v_props['diameter'], 
+            $calc[$vessel['parent']]->calculate_vessel_area($v_props['diameter'],
                                                             $v_props['height']);
         }
         //Caculate Catch Basin Attribute
         foreach ($this->Catch_Basin as $cb) {
             $cb_props = $cb['props'];
-            $calc[$cb['parent']]->add_catch_basin_volume($cb_props['length'], 
-                                                         $cb_props['width'],   
+            $calc[$cb['parent']]->add_catch_basin_volume($cb_props['length'],
+                                                         $cb_props['width'],
                                                          $cb_props['depth']);
         }
-        
+
         //Caculate Catch Basin Attribute
         foreach ($this->Object_Taking_Up_Space as $object) {
             $o_props = $object['props'];
-            $calc[$object['parent']]->add_object_volume($o_props['length'], 
+            $calc[$object['parent']]->add_object_volume($o_props['length'],
                                                         $o_props['width']);
         }
         $this->{'calc'} = $calc;
-                
+
 
         foreach($this->calc as $c){
             $c->berm_calc();
         }
 
     }
-   
+
 
     /**
      *
@@ -221,7 +221,7 @@ class Inspection {
                     phone.sufix as Company_Sufix,
                     p_zip.zipcode as Company_Zipcode
                 from t_company as comp
-                left join t_address as m_addr 
+                left join t_address as m_addr
                     on m_address_id = m_addr.id
                 left join t_city as m_city
                     on m_addr.city_id = m_city.id
