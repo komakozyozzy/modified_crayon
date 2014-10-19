@@ -3,13 +3,15 @@
 session_start();
 include_once 'database.php';
 include_once "config.php";
+include_once "klogger.php";
 
 $data = $_POST;
 //print_r($data);
 
 $config = new ConfigINI();
 $docRoot = $config->getDataPath();
-
+$log = new KLogger($config->getLogSetting("log_path"),
+                   $config->getLogSetting("severity"));
 
 if($data['type'] == 'login'){
     $db = new Database();
@@ -212,23 +214,25 @@ if($data['type'] == 'createCompany'){
        $db = new Database();
        $ctr = 0;
        //print_r($_FILES);
-       //print_r($_POST);
+	   //print_r($_POST);
        if($_POST['facility_id'] > 0 && $_POST['company_id'] > 0){
 
            $base_dir = "../data/";
            if(!is_dir($base_dir.$_POST['company_id'])){
-             if(!mkdir($base_dir.$_POST['company_id'], 0777)){
-               print "Could not make directory company\n";
-               print $base_dir.$_POST['company_id'];
+				if(!mkdir($base_dir.$_POST['company_id'], 0777)){
+					$log->logInfo(
+						"Could not make directory company",
+						$_POST);
                // break;
-             }
+				}
            }
            if(!is_dir($base_dir.$_POST['company_id']."/".$_POST['facility_id'])){
-             if(!mkdir($base_dir.$_POST['company_id']."/".$_POST['facility_id'], 0777)){
-               print "Could not make directory facility\n";
-               print $base_dir.$_POST['company_id']."/".$_POST['facility_id'];
+				if(!mkdir($base_dir.$_POST['company_id']."/".$_POST['facility_id'], 0777)){
+					$log->logInfo(
+						"Could not make directory facility",
+						$_POST);
                //break;
-             }
+				}
            }
            $move_path = $base_dir.$_POST['company_id']."/".$_POST['facility_id']."/";
            $url = "include/data/".$_POST['company_id']."/".$_POST['facility_id']."/";
@@ -238,13 +242,15 @@ if($data['type'] == 'createCompany'){
              if(move_uploaded_file($file['tmp_name'], $move_path.$file_name)) {
                $id = $db->findOrInsert('t_image', array('facility_id' => $_POST['facility_id'],
                                                         'data_path' => $url.$file_name));
-             } else{
-               $message = "There was an error uploading the file, please try again!";
+			 } else{
+				$log->logInfo(
+					"There was an error uploading the file, please try again!",
+					$_POST);
              }
              $cnt += 1;
              print $message;
          }
-       }
+	   }
        header("location:../../index.php?key=3");
   }
   if($data['type'] == 'getAttributes'):
