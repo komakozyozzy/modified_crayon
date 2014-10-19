@@ -47,7 +47,8 @@ if ($_REQUEST['type'] == 'addFacility'){
               <table>
                 <tr>
                   <td><label for="name" >Select Equipment:  </label></td>
-                  <td><select id="company_id" name="company_id" onchange="getFacilities(this)" > <?= $function->getCompanies(); ?> </select></td>
+				  <td><select id="company_id" name="company_id" onchange="getFacilities(this)" > 
+					<?php print $function->getCompanies(); ?> </select></td>
                 </tr>
              </table>
               <table id="facTable">

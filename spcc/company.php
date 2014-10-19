@@ -86,7 +86,7 @@ if(isset($_POST['type'])){
       <table>
         <tr>
           <td><label for="name" >Company Name :  </label></td>
-          <td><select onchange="changeCompanies(this)"> <?= $function->getCompanies(); ?> </select></td>
+		  <td><select onchange="changeCompanies(this)"> <?php print $function->getCompanies(); ?> </select></td>
         </tr>
       </table>
     </fieldset>
