@@ -157,7 +157,8 @@ class KLogger
 * @return void
 */
     public function __construct($logDirectory, $severity)
-    {
+	{
+		date_default_timezone_set('America/Chicago');
         $logDirectory = rtrim($logDirectory, '\\/');
 
         if ($severity === self::OFF) {
