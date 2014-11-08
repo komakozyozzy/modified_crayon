@@ -1,5 +1,5 @@
 <?php
-include('include/database.php');
+include('../spcc/include/php/database.php');
 //FieldInspDB
 //shDke6Gf#
 
