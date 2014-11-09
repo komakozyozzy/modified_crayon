@@ -32,6 +32,9 @@ class ConfigINI
         }
     }
 
+    public function getDataFolder(){
+        return $this->ini_array['data_folder'];
+    }
     public function getDataPath(){
         $env = $this->ini_array['enviroment'];
         $data = $this->ini_array['data_path'];

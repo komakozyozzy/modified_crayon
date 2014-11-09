@@ -9,7 +9,7 @@ $data = $_POST;
 //print_r($data);
 
 $config = new ConfigINI();
-$docRoot = $config->getDataPath();
+$docRoot = $config->getDataFolder();
 $log = new KLogger($config->getLogSetting("log_path"),
                    $config->getLogSetting("severity"));
 
