@@ -30,7 +30,7 @@ class Inspection {
                                  $config->getLogSetting("severity"));
 
         //Get inspection xml
-        $this->_docRoot = $config->getDataPath();
+        $this->_docRoot = $config->getDataFolder();
         $data_path = $this->_db->query("SELECT data_path, facility_id FROM t_inspection WHERE id = '$inspection_id'");
         $this->_xml = simplexml_load_file($this->_docRoot.$data_path[0]['data_path']);
         $this->{'facility_id'} = $data_path[0]['facility_id'];

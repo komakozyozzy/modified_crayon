@@ -1,6 +1,6 @@
 <?php
 
-$dbconn = mysql_connect("localhost","root","ns0251519");
+$dbconn = mysql_connect("localhost","user","password");
 if(!$dbconn){
 	die('Could not connect: ' . mysql_error());
 }
