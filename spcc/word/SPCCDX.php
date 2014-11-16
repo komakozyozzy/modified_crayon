@@ -46,8 +46,7 @@ $spcc = new spcc_docx_template($insp);
 
 
 if (!$development){
-    $docx = new CreateDocx();
-    $docx->addTemplate('templates/SPCC.docx');
+    $docx = new CreateDocxFromTemplate('templates/SPCC.docx');
 } else {
     $docx = null;
 }
