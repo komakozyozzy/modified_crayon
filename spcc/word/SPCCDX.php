@@ -7,8 +7,13 @@
  */
 
 function development($docx, $dev, $var, $replace, $type='html') {
-    if (!$dev) {
-        $docx->addTemplateVariable($var, $replace, $type);
+	if (!$dev) {
+
+	$docx->replaceVariableByHTML(
+		$var,
+		'block',
+		$replace,
+		array('isFile' => false, 'parseDivsAsPs' => true, 'downloadImages' => false));
     } else {
         echo $replace . '<br>';
     }
