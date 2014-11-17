@@ -64,11 +64,14 @@ class spcc_docx_template {
         global $fac_location;
         global $fac_security;
         global $facility_equipment_conditions;
-        $info = $inspectionData[0]['props'];
+		$info = $inspectionData[0]['props'];
+		$style = "width:100%;border:1px solid blue;";
+		$shead = "border:1px solid blue;";
+		$srow = "border:1px solid blue;text-align:right;";
 
-        $html = $this->css . '<table class="SPCC_Table" style="width:100%;">
-                                                <thead>
-                                                    <tr>
+        $html = '<table class="SPCC_Table" style="'.$style.'">
+                                                <thead >
+                                                    <tr style="'.$shead.'">
                                                        <th style="text-align:center" colspan="2">
                                                           FACILITY LOCATION
                                                        </th>
@@ -77,9 +80,9 @@ class spcc_docx_template {
                                               <tbody>';
         foreach ($fac_location as $field => $text) {
             // logic in here to handle questions and build deficiency array
-            $html .= '<tr>
+            $html .= '<tr style="'.$srow.'">
                           <td width="80%">' . $text . '</td>
-                          <td width="20%">' . $info[$field] . '</td>
+                          <td width="20%" style="align:right">' . $info[$field] . '</td>
                       </tr></tbody><thead>';
         }
         // FACILITY SECURITY & SIGNAGE TABLE
@@ -151,9 +154,9 @@ class spcc_docx_template {
                 '' . $data['Company_Sufix'];
         $facType = 'Onshore ' . $data['Facility_Type'] . ' Facility';
         $h = new HTMLHelper();
-        $style = array('style' => 'text-align:center');
+        $style = array('style' => 'text-align:center;border:5px solid black;');
         $class = array('class' => 'SPCC_Table');
-        $html = $h->tag('div', $this->css .
+        $html = $h->tag('div',
                 $h->tag('table', $h->tag('thead', $h->tag('tr', $h->tag('th', 'Prepared For', $style))) .
                         $h->tag('tbody', $h->tag('tr', $h->tag('td', $data['Company_Name'])) .
                                 $h->tag('tr', $h->tag('td', $comp_addr)) .
