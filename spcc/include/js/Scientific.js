@@ -574,4 +574,24 @@
     }
   };
 
+  getSPCC = function(data) {
+	var data, data_path, id, name, value;
+    value = $(data).val();
+
+	var spcclocation = '../spcc/word/SPCCDX.php?ref='+value;
+	window.open(spcclocation);
+    //name = $(ele).attr('name');
+    //data_path = localStorage.getItem("data_path");
+    //if (value !== '') {
+      //data = {
+        //'id': id,
+        //'type': 'updateXML',
+        //'value': value,
+        //'name': name,
+        //'data_path': data_path
+      //};
+      //return myJax(data, [updatedXML], false);
+    //}
+  };
+
 }).call(this);

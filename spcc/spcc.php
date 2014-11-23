@@ -38,8 +38,8 @@ $template->header(array('css'=>"include/css/process.css"));
               </tr>
               <tr>
                 <td><label for="name" >Select Inspection :  </label></td>
-                <td>
-				  <select id="ins_select" parent="0" >
+				<td>
+				  <select id="ins_select" parent="0" onchange="getSPCC(this)">
                   </select>
                 </td>
               </tr>
@@ -50,6 +50,5 @@ $template->header(array('css'=>"include/css/process.css"));
 <?php
 $template->footer();
 
-                  //<select id="ins_select" parent="0" onchange="getSPCC(this)">
 ?>
 
