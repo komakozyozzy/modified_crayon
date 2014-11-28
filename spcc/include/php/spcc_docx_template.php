@@ -1,4 +1,3 @@
-
 <?php
 include_once "calculations.php";
 include_once "functions.php";
@@ -40,7 +39,8 @@ class spcc_docx_template {
                             .SPCC_Table td{
                                 background-color:#F3F3F3;
                                 border:1px solid #000000;
-                                text-align:left;
+                                text-align:left; margin-left: auto;
+    margin-right: auto;
                                 font-size:12px;
                                 font-family:Helvetica;
                                 font-weight:bold;
@@ -65,11 +65,11 @@ class spcc_docx_template {
         global $fac_security;
         global $facility_equipment_conditions;
 		$info = $inspectionData[0]['props'];
-		$style = "width:100%;border:1px solid blue;";
-		$shead = "border:1px solid blue;";
-		$srow = "border:1px solid blue;text-align:right;";
+		$style = "width:100%;border:3px solid black;";
+		$shead = "border:3px solid black;";
+		$srow = "border:1px solid black;text-align:right;";
 
-        $html = '<table class="SPCC_Table" style="'.$style.'">
+        $html = $this->css.'<table class="SPCC_Table" style="'.$style.'">
                                                 <thead >
                                                     <tr style="'.$shead.'">
                                                        <th style="text-align:center" colspan="2">
@@ -86,7 +86,7 @@ class spcc_docx_template {
                       </tr></tbody><thead>';
         }
         // FACILITY SECURITY & SIGNAGE TABLE
-        $html .='<tr>
+        $html .='<tr style="'.$shead.'">
                     <th style="text-align:center" colspan="2">
                        FACILITY SECURITY & SIGNAGE
                     </th>
@@ -94,26 +94,26 @@ class spcc_docx_template {
         // use a function with a switch statement to evaluate cases that may need coditional logic
         foreach ($fac_security as $field => $text) {
             // logic in here to handle questions and build deficiency array
-            $html .= '<tr>
+            $html .= '<tr style="'.$srow.'">
                         <td width="80%">' . $text . '</td>
                         <td width="20%">' . $info[$field] . '</td>
                       </tr>';
         }
         // FACILITY EQUIPMENT & CONDITIONS TABLE
-        $html .='<tr>
+        $html .='<tr style="'.$shead.'">
                     <th style="text-align:center" colspan="2">
                        FACILITY EQUIPMENT & CONDITIONS
                     </th>
                  </tr></thead><tbody>';
         foreach ($facility_equipment_conditions as $field => $text) {
             // logic in here to handle questions and build deficiency array
-            $html .= '<tr>
+            $html .= '<tr style="'.$srow.'">
                         <td width="80%">' . $text . '</td>
                         <td width="20%">' . $info[$field] . '</td>
                       </tr>';
         }
         // BERM CONDITIONS AND DIMENSIONS TABLE
-        $html .='<tr>
+        $html .='<tr style="'.$shead.'">
                     <th style="text-align:center" colspan="2">
                        BERM CONDITIONS AND DIMENSIONS:
                     </th>
@@ -126,7 +126,8 @@ class spcc_docx_template {
 //                      </tr>';
 //        }
         // SUMMARY OF DETAILS THAT NEED IMMEDIATE ATTENTION TABLE / DEFICIENCIES
-        $html .='<tr>
+        $html .='<tr st margin-left: auto;
+    margin-right: auto;yle="'.$shead.'">
                     <th style="text-align:center; color:#fff; background-color:red" colspan="2">
                        SUMMARY OF DETAILS THAT NEED IMMEDIATE ATTENTION:
                     </th>
@@ -154,17 +155,23 @@ class spcc_docx_template {
                 '' . $data['Company_Sufix'];
         $facType = 'Onshore ' . $data['Facility_Type'] . ' Facility';
         $h = new HTMLHelper();
-        $style = array('style' => 'text-align:center;border:5px solid black;');
+		$style = array(
+			'class' => 'SPCC_Table',
+			'style' => 'text-align:center;');
+        $srow = array('style' => 'text-align:center;');
         $class = array('class' => 'SPCC_Table');
         $html = $h->tag('div',
-                $h->tag('table', $h->tag('thead', $h->tag('tr', $h->tag('th', 'Prepared For', $style))) .
-                        $h->tag('tbody', $h->tag('tr', $h->tag('td', $data['Company_Name'])) .
-                                $h->tag('tr', $h->tag('td', $comp_addr)) .
-                                $h->tag('tr', $h->tag('td', $comp_phone)) .
-                                $h->tag('tr', $h->tag('td', $h->tag('b', $data['Facility_Name']))) .
-                                $h->tag('tr', $h->tag('td', $data['Facility_Name'])) .
-                                $h->tag('tr', $h->tag('td', $facType))
-                        ), $class), $style);
+			$this->css.$h->tag('table', 
+				$h->tag('thead', $h->tag('tr', $h->tag('th', 'Prepared For', $style))) .
+					$h->tag('tbody', 
+						$h->tag('tr', $h->tag('td', $data['Company_Name']),$srow) .
+                      	$h->tag('tr', $h->tag('td', $comp_addr),$srow) .
+                       	$h->tag('tr', $h->tag('td', $comp_phone),$srow) .
+                       	$h->tag('tr', $h->tag('td', $h->tag('b', $data['Facility_Name'])),$srow) .
+                       	$h->tag('tr', $h->tag('td', $data['Facility_Name']),$srow) .
+                        $h->tag('tr', $h->tag('td', $facType),$srow)
+					), $style), 
+				array('style'=>' margin-left: auto;margin-right: auto;width:100%'));
         return $html;
     }
 
@@ -185,8 +192,8 @@ class spcc_docx_template {
                 $n = $a['props']['areaNum'];
                 $ld = $a['props']['load_dir'];
                 $m = $a['props']['berm_constructed'];
-                $l_dir = "<span style=\"display:block;\">The truck loading area is located on the $ld side of the containment area.  ";
-                $str .= "Area $n$letter: $l' x $w' x $c\" and it is constructed of $m.  $l_dir </span></p>";
+                $l_dir = "The truck loading area is located on the $ld side of the containment area.  ";
+                $str .= "<p>Area $n$letter: $l' x $w' x $c\" and it is constructed of $m.  $l_dir </p>";
             }
             $str .= '';
         }
