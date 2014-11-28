@@ -168,13 +168,13 @@ class Inspection {
 
         //Caculate Vessel Attributes
         foreach ($this->Vessel as $vessel) {
-            $v_props = $vessel['props'];
-            $calc[$vessel['parent']]->set_production_value($v_props['type'],
+			$v_props = $vessel['props'];
+            $calc[$vessel['parent']]->set_production_value($v_props['use'],
                                                            $props['oil_production'],
                                                            $props['water_production']);
             $calc[$vessel['parent']]->calculate_vessel_area($v_props['diameter'],
                                                             $v_props['height']);
-        }
+		}
         //Caculate Catch Basin Attribute
         foreach ($this->Catch_Basin as $cb) {
             $cb_props = $cb['props'];
