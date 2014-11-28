@@ -5,6 +5,7 @@
  * @todo  Need the LEPC and EPA reg data
  * @todo  Need to work on the last part of the berm calc with Mekay
  */
+ 
 
 function development($docx, $dev, $var, $replace, $type='html') {
 	if (!$dev) {
@@ -25,9 +26,12 @@ include_once "../include/php/spcc_docx_template.php";
 require_once("../../phpdocx/classes/CreateDocx.inc");
 include_once "../include/php/functions.php";
 include_once "../include/php/dbconn.php";
+include_once "../include/php/database.php";
 
-$facID = 11;
+$db = new Database();
+$facID = $db->getId('t_inspection', array('data_path'=>$_GET['ref']));
 $insp = new Inspection($facID);
+
 //$insp->debug();
 //$insp->debug($insp->Vessel);
 //die();
