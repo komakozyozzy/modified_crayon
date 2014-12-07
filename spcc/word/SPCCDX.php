@@ -104,16 +104,29 @@ $variables = array('COMPANY' => $insp->Company_Name,
 						   $insp->fire_dept['addr_state']." ".
 						   $insp->fire_dept['addr_zip'],
 				   'FIRE_PHONE' => $insp->fire_dept['phone']
-);
-//
+			   );
+
+//for complicated variables
 foreach($variables as $index => $value){
-	//$insp->debug($index);
-	//$insp->debug($value);
 	$docx->replaceVariableByText(
 		array($index => $value),
 		array('parseLineBreaks'=>true));
 }
-//die();
+//for simple variables
+//foreach($db->query("select * from t_equipment where parent IS NULL") as $idArray){
+	//$id = $idArray['id'];
+	//$estr = "select name from t_attribute where equipment_id = $id";
+	//foreach($db->query($estr) as $nArray)
+	//{
+		//$name = $nArray['name'];
+		//$docx->replaceVariableByText(
+			//array(strtoupper($name) => $fp[$name]),
+			//array('parseLineBreaks'=>true));
+	//}
+//}
+
+
+
 //Prepared For
 $company = array(
 	'Company_Name' => $insp->Company_Name, 
