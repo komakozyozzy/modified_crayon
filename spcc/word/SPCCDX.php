@@ -72,42 +72,102 @@ $a_num = array('one (1)','two (2)','three (3)', 'four (4)','five (5)',
 $og = ($fp['oil_production'] * 32);
 $sg = ($fp['water_production'] * 32);
 
-$variables = array('COMPANY' => $insp->Company_Name,
-				   'LEASE' => $insp->Facility_Name,
-				   'FAC_TYPE' => 'Onshore '.$fp['facility_type'].' Facility',
-				   'OWNER_ADDRESS' => $p_address,
-				   'MAILING_ADDRESS' => $m_address,
-				   'PHYSICAL_ADDRESS' => $p_address,
-				   'AREA_NUM' => $a_num[((count($insp->Area)<11)?
-											count($insp->Area):"NUMBER TO HIGH")],
-				   'OG' => sprintf("%d", ($fp['oil_production']*32)),
-				   'SG' => sprintf("%d", ($fp['water_production']*32)),
-				   'TG' => sprintf("%d", (($fp['oil_production'] + $fp['water_production'])*32)),
-				   'HT' => $fp['is_heater'],
-				   'SHERIFF' => $insp->sheriff['name'],
-				   'SHERIFF_PHONE' => $insp->sheriff['phone'],
-				   'DEPT_EQ' => $insp->deq['name'],
-				   'DEPT_EQ_PHONE' => $insp->deq['phone'],
-				   'DWC' => $insp->dept_wild_life['name'],
-				   'DWC_PHONE' => $insp->dept_wild_life['phone'],
-				   'FIRE_MARSHAL' => $insp->fire_marshal['name'],
-				   'FIRE_MARSHAL_PHONE' => $insp->fire_marshal['phone'],
-				   'HYPO' => $insp->state_police['name'],
-				   'HYPO_PHONE' => $insp->state_police['phone'],
-				   'ARMY' => 'Dont Have',
-				   'ARMY_PHONE' => 'Dont Have',
-				   'WRB' => $insp->water_resouce['name'],
-				   'WRB_PHONE' => $insp->water_resouce['phone'],
-				   'FIRE_DEPT' => $insp->fire_dept['name'],
-				   'FIRE_ADDR_1' => $insp->fire_dept['addr_one'], 
-				   'FIRE_ADDR_2' => $insp->fire_dept['addr_city'].", ".
-						   $insp->fire_dept['addr_state']." ".
-						   $insp->fire_dept['addr_zip'],
-				   'FIRE_PHONE' => $insp->fire_dept['phone']
-			   );
+$variables = array(
+	'COMPANY' => $insp->Company_Name,
+	'LEASE' => $insp->Facility_Name,
+	'FAC_TYPE' => 'Onshore '.$fp['facility_type'].' Facility',
+	'OWNER_ADDRESS' => $p_address,
+	'MAILING_ADDRESS' => $m_address,
+	'PHYSICAL_ADDRESS' => $p_address,
+	'AREA_NUM' => $a_num[((count($insp->Area)<11)?
+		count($insp->Area):"NUMBER TO HIGH")],
+
+	'OB' => $fp['oil_production'],
+	'SB' => $fp['water_production'],
+	'OG' => sprintf("%d", ($fp['oil_production']*32)),
+	'SG' => sprintf("%d", ($fp['water_production']*32)),
+	'TG' => sprintf("%d", (($fp['oil_production'] + $fp['water_production'])*32)),
+
+	'SHERIFF' => $insp->sheriff['name'],
+	'SHERIFF_PHONE' => $insp->sheriff['phone'],
+	'DEPT_EQ' => $insp->deq['name'],
+	'DEPT_EQ_PHONE' => $insp->deq['phone'],
+	'DWC' => $insp->dept_wild_life['name'],
+	'DWC_PHONE' => $insp->dept_wild_life['phone'],
+	'FIRE_MARSHAL' => $insp->fire_marshal['name'],
+	'FIRE_MARSHAL_PHONE' => $insp->fire_marshal['phone'],
+	'HYPO' => $insp->state_police['name'],
+	'HYPO_PHONE' => $insp->state_police['phone'],
+	'ARMY' => 'Dont Have',
+	'ARMY_PHONE' => 'Dont Have',
+	'WRB' => $insp->water_resouce['name'],
+	'WRB_PHONE' => $insp->water_resouce['phone'],
+	'FIRE_DEPT' => $insp->fire_dept['name'],
+	'FIRE_ADDR_1' => $insp->fire_dept['addr_one'], 
+	'FIRE_ADDR_2' => $insp->fire_dept['addr_city'].", ".
+		$insp->fire_dept['addr_state']." ".$insp->fire_dept['addr_zip'],
+	'FIRE_PHONE' => $insp->fire_dept['phone'],
+	'EPA_REGION' => $fp['epa_number'],
+	'EPA_PHONE' => $fp['epa_phone'],
+	'EPA_ADDR' => $fp['epa_address'],
+
+	'STATE_AGENCY' => $fp['state_reg_agency'],
+	'STATE_PHONE' => $fp['state_reg_phone'],
+	'STATE_ADDR' => $fp['state_reg_addr'],
+	'DISTRICT' => $fp['state_reg_district'],
+
+	'BHDHE_COMPANY' => $fp['dozer_name'],
+	'BDHE_PHONE' => $fp['dozer_phone'],
+	'VTTFT_COMPANY' => $fp['vac_name'],
+	'VTTFT_PHONE' => $fp['vac_phone'],
+	'RC_CREW' => $fp['roust_name'],
+	'RC_CREW_PHONE' => $fp['roust_phone'],
+
+	'PLANNING_ADDR' => $fp['lepc_address'],
+	'PLANNING_PHONE' => $fp['lepc_phone'],
+
+	'PRESIDENT' => $fp['AR_name'],
+	'FOM' => $fp['FOM_name'],
+	'RC' => $fp['RC_name'],
+	'PUMPER' => $fp['pumper_name'],
+	'PRES_PHONE' => $fp['AR_phone'],
+	'FOM_PHONE' => $fp['FOM_phone'],
+	'RC_PHONE' => $fp['RC_phone'],
+	'PUMPER_PHONE' => $fp['pumper_phone'],
+	'PRES_ADDR' => $fp['AR_address'],
+	'FOM_ADDR' => $fp['FOM_address'],
+	'RC_ADDR' => $fp['RC_address'],
+	'PUMPER_ADDR' => $fp['pumper_address'],
+
+	'LAT' => $fp['latitude'],
+	'LON' => $fp['longitude'],
+	'STATE' => $fp['facility_state'],
+	'COUNTY' => $fp['facility_county'],
+	'DATEOO' => $fp['insp_date'],
+
+	'LEASE_ROAD' => $fp['main_road'],
+	'LEASE_RD_CONST' => $fp['road_comp'],
+	'STORM_DRAIN' => $fp['storm_drain'],
+
+	'HT' => $fp['is_heater'],
+	'PROD_EQUIP' => $fp['prod_equip'],
+
+	'WATER_DIR' => $fp['water_dir'],
+	'LAND_TYPE' => $fp['land_type'],
+	'ADJ_LAND_TYPE' => $fp['adj_land_type'],
+	'REG_AUTH' => $fp['state_reg_agency'],
+	'BRL_LIMIT' => $fp['brl_limit'],
+	'ENGINEER_NOTES' => $fp['engineer_notes'],
+
+	'GATE_LOCK' => $fp['entrance_locked'], //TODO needs some work
+
+	'YEARS_XP' => $fp['years_experience']
+
+);
 
 //for complicated variables
 foreach($variables as $index => $value){
+	//TODO look at the value and tell if it is missing and replace it
 	$docx->replaceVariableByText(
 		array($index => $value),
 		array('parseLineBreaks'=>true));
