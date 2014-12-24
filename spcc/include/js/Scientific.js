@@ -198,7 +198,7 @@
 				  '<td><label for="name" >Facility Name :  </label></td>' + 
 				  '<td><input type="text" name="facility[]" value="' + x.name + '"/></td>' + 
 				  '<td><input type="hidden" name="facility_id[]" value="' + x.id + '"/>' + 
-					'<img src="include/image/delete.png" onclick="deleteFacility(this, 0)" /></td>' + 
+					'<img src="include/image/delete.png" onclick="deleteFacilityBox(this, ' + x.id + ')" /></td>' + 
 				'</tr>'));
     }
     return _results;
