@@ -335,29 +335,8 @@
 	 *
 	 */
   deletedFac = function(data) {
-    var i, index, num, v, value, _ref, _results;
     if (data.result === 'true') {
-      _ref = $('tr');
-      _results = [];
-      for (i in _ref) {
-        v = _ref[i];
-        _results.push((function() {
-          var _ref1, _results1;
-          _ref1 = $(v).find('input');
-          _results1 = [];
-          for (index in _ref1) {
-            value = _ref1[index];
-            num = i - 1;
-            if ($(value).attr('type') === 'text') {
-              _results1.push($(value).attr('name', 'name' + num));
-            } else {
-              _results1.push($(value).attr('name', num));
-            }
-          }
-          return _results1;
-        })());
-      }
-      return _results;
+      return;
     }
   };
 
