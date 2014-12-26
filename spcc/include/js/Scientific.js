@@ -626,7 +626,11 @@
         _ref2 = x.options;
         for (_l = 0, _len3 = _ref2.length; _l < _len3; _l++) {
           y = _ref2[_l];
-          str += '<option value="' + y.text + '">' + y.text + '</option>';
+		  s = ''
+		  if(y.text == x.answer){
+			s = 'selected="selected"'
+		  }
+          str += '<option '+ s +' value="' + y.text + '">' + y.text + '</option>';
         }
         str += '</select>';
       } else {
