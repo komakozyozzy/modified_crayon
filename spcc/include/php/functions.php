@@ -9,7 +9,7 @@ class Functions {
 
     function getCompanies(){
         $str = '<option value="0"></option>';
-        $query = $this->db->query("SELECT id, name FROM t_company");
+        $query = $this->db->query("SELECT id, name FROM t_company order by name");
         foreach($query as $q){
             $str .= '<option value="'.$q['id'].'">'.$q['name'].'</option>';
         }
@@ -18,7 +18,7 @@ class Functions {
 
     function getUsers(){
         $str = '<option value="0"></option>';
-        $query = $this->db->query("SELECT id, name FROM t_user");
+        $query = $this->db->query("SELECT id, name FROM t_user order by name");
         foreach($query as $q){
             $str .= '<option value="'.$q['id'].'">'.$q['name'].'</option>';
         }

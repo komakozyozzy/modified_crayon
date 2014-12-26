@@ -190,7 +190,7 @@ if($data['type'] == 'createCompany'){
    if($data['type'] == 'getFacilities'){
        $db = new Database();
 
-       $query = $db->query("SELECT id, name FROM t_facility WHERE company_id = '".$_POST['company_id']."'");
+       $query = $db->query("SELECT id, name FROM t_facility WHERE company_id = '".$_POST['company_id']."' order by name");
        $result = array();
        foreach($query as $q){
          $result[] = array('id' => $q['id'], 'name' => $q['name']);
