@@ -265,7 +265,7 @@ if($data['type'] == 'createCompany'){
   endif;
   if($data['type'] == 'getOptions'):
        $db = new Database();
-       $result = $db->query("SELECT id, text FROM t_option WHERE attribute_id = '".$data['id']."'");
+       $result = $db->query("SELECT id, text FROM t_option WHERE attribute_id = '".$data['id']."' order by text");
        print json_encode($result);
   endif;
   if($data['type'] == 'deleteOption'):
@@ -317,7 +317,7 @@ if($data['type'] == 'createCompany'){
            }
          }
          if($result['type'] != "text"){
-           $res = $db->query("select * from t_option where attribute_id = ".$result['attr_id']."");
+           $res = $db->query("select * from t_option where attribute_id = ".$result['attr_id']." order by text");
            $options = array();
            foreach($res as $r){
              $options[] = array('text' => $r['text']);
