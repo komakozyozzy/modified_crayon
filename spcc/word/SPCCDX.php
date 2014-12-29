@@ -60,7 +60,7 @@ if (!$development){
 
 //Facility Location
 
-development($docx, $development, 'FIR', $spcc->fir($inspectionData));
+development($docx, $development, 'FIR', $spcc->fir($inspectionData,$insp->Area));
 //Facility Image 
 //development($docx, $development, 'IMAGE1', $insp->images[0], 'image');
 

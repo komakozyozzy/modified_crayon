@@ -9,6 +9,157 @@ include_once "../include/php/HTMLHelper.php";
 // this array can be built in the logic of the inspection tables.
 $deficiency_array = array('' => '');
 
+class FIR {
+	private $insp;
+	private $areas;
+	private $srow = "text-align:right;";
+	public function __construct($inspection, $area){
+		$this->insp = $inspection;
+		$this->areas = $area;
+	}
+	public function template($title, $data){
+
+		$style = "width:100%;border:3px solid black;";
+		$shead = "border:3px solid black;";
+
+        return '<thead >
+			<tr style="'.$shead.'">
+				<th style="text-align:center" colspan="2">'.$title.'</th>
+			</tr>
+		</thead>
+		<tbody>'.$data.'</tbody>';
+	}
+	public function location(){
+
+		global $fac_location;
+		$html = '';
+		foreach ($fac_location as $field => $text) {
+            // logic in here to handle questions and build deficiency array
+            $html .= '<tr style="'.$this->srow.'">
+                          <td width="80%">' . $text . '</td>
+                          <td width="20%" style="align:right">' . $this->insp[$field] . '</td>
+                      </tr>';
+		}
+		return $this->template('FACILITY LOCATION',$html);
+	}
+	public function security(){
+		global $fac_security;
+		$html = '';
+        // use a function with a switch statement to evaluate cases that may need coditional logic
+        foreach ($fac_security as $field => $text) {
+            // logic in here to handle questions and build deficiency array
+            $html .= '<tr style="'.$this->srow.'">
+                        <td width="80%">' . $text . '</td>
+                        <td width="20%">' . $this->insp[$field] . '</td>
+                      </tr>';
+		}
+		/**
+		 * Get the data from the area
+		 **/
+		$num = 1;
+		foreach ($this->areas as $area) {
+
+			$ainfo = $area['props'];
+			$html .= '<tr style="'.$this->srow.'">
+						<td width="80%">Area # '.$num.' Emergency Shut Off</td>
+						<td width="20%">' . $ainfo['emergency_shut_off'] . '</td>
+					</tr>';
+
+			$html .= '<tr style="'.$this->srow.'">
+						<td width="80%">Area # '.$num.' Area Fenced</td>
+						<td width="20%">' . $ainfo['area_fenced'] . '</td>
+					</tr>';
+			$num += 1;
+		}
+		return $this->template('FACILITY SECURITY & SIGNAGE',$html);
+	}
+	public function conditions(){
+
+        global $facility_equipment_conditions;
+		$html = '';
+        foreach ($facility_equipment_conditions as $field => $text) {
+            // logic in here to handle questions and build deficiency array
+			$html .=  $this->row($text, $this->insp[$field]);
+		}
+
+		/**
+		 * Get the data from the area
+		 **/
+		$num = 1;
+		foreach ($this->areas as $area) {
+
+			$ainfo = $area['props'];
+			$html .= $this->row('Area # '.$num.' Dike Drain',$ainfo['dike_drain']);
+			$num += 1;
+		}
+
+		return $this->template('FACILITY EQUIPMENT & CONDITIONS',$html);
+	}
+
+	public function berm(){
+		//print '<pre>';
+		//print_r($this->areas);
+		//print '</pre>';
+		//die();
+		$x = 1;
+		foreach ($this->areas as $area) {
+
+			$ainfo = $area['props'];
+			$html .= $this->row('Area #'.$x.' Berm Construction', $ainfo['berm_constructed']);
+			if($ainfo['shape_one'] != '') {
+				$html .= $this->row(
+					'Area #'.$x.' Dimensions ',
+					$this->dimensions($ainfo['width_one'],$ainfo['length_one'],$ainfo['hieght_one']));
+				$html .= $this->row(
+					'Area #'.$x.' Proposed Dimensions ',
+					$this->dimensions($ainfo['width_one'],$ainfo['length_one'],$ainfo['hieght_one']));
+			}
+
+			if($ainfo['shape_two'] != '') {
+				$html .= $this->row(
+					'Area #'.$x.' Dimensions ',
+					$this->dimensions($ainfo['width_two'],$ainfo['length_two'],$ainfo['hieght_two']));
+				$html .= $this->row(
+					'Area #'.$x.' Proposed Dimensions ',
+					$this->dimensions($ainfo['width_two'],$ainfo['length_two'],$ainfo['hieght_two']));
+			}
+
+
+			if($ainfo['shape_three'] != '') {
+				$html .= $this->row(
+					'Area #'.$x.' Dimensions ',
+					$this->dimensions($ainfo['width_three'],$ainfo['length_three'],$ainfo['hieght_three']));
+				$html .= $this->row(
+					'Area #'.$x.' Proposed Dimensions ',
+					$this->dimensions($ainfo['width_three'],$ainfo['length_three'],$ainfo['hieght_three']));
+			}
+
+
+			if($ainfo['shape_four'] != '') {
+				$html .= $this->row(
+					'Area #'.$x.' Dimensions ',
+					$this->dimensions($ainfo['width_four'],$ainfo['length_four'],$ainfo['hieght_four']));
+				$html .= $this->row(
+					'Area #'.$x.' Proposed Dimensions ',
+					$this->dimensions($ainfo['width_four'],$ainfo['length_four'],$ainfo['hieght_four']));
+			}
+
+			$x += 1;
+		}
+
+		return $this->template('BERM CONDITIONS & DIMENSIONS',$html);
+	}
+	public function row($question, $answer){
+
+		return '<tr style="'.$this->srow.'">
+					<td width="80%">'.$question.'</td>
+					<td width="20%">' . $answer . '</td>
+				</tr>';
+	}
+	public function dimensions($w,$l,$h){
+		return 'W '.$w.' L '.$l.' H '.$h;
+	}
+}
 class spcc_docx_template {
 	/**
 	 * @author Nicholas Smith
@@ -58,76 +209,20 @@ class spcc_docx_template {
      * keeping the format and design as close to the original as possible.
      */
 
-    // Vessel/Area data may need to be added as parameters 
-    public function fir($inspectionData) {
-        // FIELD INSPECTION REPORT TABLE
-        global $fac_location;
-        global $fac_security;
-        global $facility_equipment_conditions;
-		$info = $inspectionData[0]['props'];
+// Vessel/Area data may need to be added as parameters 
+	public function fir($inspectionData, $areas) {
+		$fir = new FIR($inspectionData[0]['props'],$areas);
+
 		$style = "width:100%;border:3px solid black;";
 		$shead = "border:3px solid black;";
-		$srow = "border:1px solid black;text-align:right;";
 
-        $html = $this->css.'<table class="SPCC_Table" style="'.$style.'">
-                                                <thead >
-                                                    <tr style="'.$shead.'">
-                                                       <th style="text-align:center" colspan="2">
-                                                          FACILITY LOCATION
-                                                       </th>
-                                                    </tr>
-                                                </thead>
-                                              <tbody>';
-        foreach ($fac_location as $field => $text) {
-            // logic in here to handle questions and build deficiency array
-            $html .= '<tr style="'.$srow.'">
-                          <td width="80%">' . $text . '</td>
-                          <td width="20%" style="align:right">' . $info[$field] . '</td>
-                      </tr></tbody><thead>';
-        }
-        // FACILITY SECURITY & SIGNAGE TABLE
-        $html .='<tr style="'.$shead.'">
-                    <th style="text-align:center" colspan="2">
-                       FACILITY SECURITY & SIGNAGE
-                    </th>
-                 </tr></thead><tbody>';
-        // use a function with a switch statement to evaluate cases that may need coditional logic
-        foreach ($fac_security as $field => $text) {
-            // logic in here to handle questions and build deficiency array
-            $html .= '<tr style="'.$srow.'">
-                        <td width="80%">' . $text . '</td>
-                        <td width="20%">' . $info[$field] . '</td>
-                      </tr>';
-        }
-        // FACILITY EQUIPMENT & CONDITIONS TABLE
-        $html .='<tr style="'.$shead.'">
-                    <th style="text-align:center" colspan="2">
-                       FACILITY EQUIPMENT & CONDITIONS
-                    </th>
-                 </tr></thead><tbody>';
-        foreach ($facility_equipment_conditions as $field => $text) {
-            // logic in here to handle questions and build deficiency array
-            $html .= '<tr style="'.$srow.'">
-                        <td width="80%">' . $text . '</td>
-                        <td width="20%">' . $info[$field] . '</td>
-                      </tr>';
-        }
-        // BERM CONDITIONS AND DIMENSIONS TABLE
-        $html .='<tr style="'.$shead.'">
-                    <th style="text-align:center" colspan="2">
-                       BERM CONDITIONS AND DIMENSIONS:
-                    </th>
-                 </tr></thead><tbody>';
-        // for each area...
-//        foreach($facility_equipment_conditions as $field => $text){
-//            $html .= '<tr>
-//                        <td width="80%">'.$text.'</td>
-//                        <td width="20%">'.$info[$field].'</td>
-//                      </tr>';
-//        }
+		$html = $this->css.'<table class="SPCC_Table" style="'.$style.'">';
+		$html .= $fir->location();
+		$html .= $fir->security();
+		$html .= $fir->conditions();
+        $html .= $fir->berm();
         // SUMMARY OF DETAILS THAT NEED IMMEDIATE ATTENTION TABLE / DEFICIENCIES
-        $html .='<tr st margin-left: auto;
-    margin-right: auto;yle="'.$shead.'">
+        $html .='<tr style="'.$shead.'">
                     <th style="text-align:center; color:#fff; background-color:red" colspan="2">
                        SUMMARY OF DETAILS THAT NEED IMMEDIATE ATTENTION:
                     </th>
