@@ -35,11 +35,12 @@
                     );
     
     $fac_location = array('facility_state'=>'Facility State', 
-                         'facility_county'=>'County',
-                         'facility_type'=>'Facility Type', 
-                         'rrc_num'=>'RRC#', 
-                         'latitude'=>'Latitude',
-                         'longitude'=>'Lobgitude' 
+                         'facility_county'=>'Facility County',
+						 'facility_type'=>'Facility Type', 
+						 'legal_desc' => 'Legal Description:',
+                         'rrc_num'=>'Lease Permit Number:', 
+                         'latitude'=>'Center of Facility GPS Latitude',
+                         'longitude'=>'Center of Facility GPS Logitude' 
                        );
 
     $fac_security = array('gate_entrance'=>'Is there a gate at the entrance?', 
@@ -54,9 +55,12 @@
                           'signage_well_condition'=>'What is the condition of the sign?',
                           'h2s_gas'=>'Is there H2S gas present?',
                           'h2s_gas_sign'=>'Is there a sign?',
-                          'h2s_ppms'=>'What is the H2S Measurement?',
-                          'h2s_wind_condition'=>'What is the Wind Condition?'
-                          // containment area questions need to be generated dynamically
+                          'h2s_gas_ppms'=>'What is the H2S Measurement?',
+						  'h2s_wind_condtion'=>'What is the Wind Condition?',
+						  'facility_monitored'=>'Is Facility Monitored'
+						  // containment area questions need to be generated dynamically
+						  // area_fenced
+						  // emergency_shut_off
                        );
     /*
      *  Everything will work for this array except the 'sump pump for area 1' question and the dike drain 
