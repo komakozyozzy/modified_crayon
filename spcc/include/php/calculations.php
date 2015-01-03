@@ -30,7 +30,7 @@ class Calculation {
     }
 
     public function berm_calc($default=FALSE) {
-    
+
      if(!$default){
         $this->berm_calculation = round(((((( $this->largest_vessel_area * $this->largest_vessel_hieght)+
                ($this->production_value * 5.615))-($this->catch_basin_area_volume))/($this->contianment_area_volume - 
@@ -42,30 +42,30 @@ class Calculation {
      //comment this out for testing puposes..
      if($this->berm_calculation < 10)$this->berm_calculation = 10;
     }
-    
+
     public function set_production_value($type, $oil=0, $sw=0){
-        
+
         $type = strtolower($type);
-      
+
         if($type == "oil"){
             $this->oil_value = $oil;
         }
         if($type == "sw"){
         $this->salt_water_value = $sw;
         }
-         
+
         $both_array = array("oil/sw", "sep", "ht", "ih", "fwko", "stkpk", "gb", "scrubber", "dehd", "lh", "con");
-        
+
         foreach($both_array as $value){
             if($type == $value){
-                $this->oil_value = $oil; 
+                $this->oil_value = $oil;
                 $this->salt_water_value = $sw;
             }
-        } 
+        }
         $this->production_value = $this->oil_value + $this->salt_water_value;
-    
+
     }
-		
+
     public function nominal_capacity($dia, $hieght, $width = null, $shape = null){
 	    if ($shape == "Rectangle" || $width > 0 || $width != null ){
                 $vlu = $dia * $hieght * $width * 0.17810760;
@@ -84,20 +84,19 @@ class Calculation {
         }else{
         $k = round(($dia/2*$dia/2*3.1416));
         }
-		
+
         if($v > $this->largest_vessel_capacity){
             $this->largest_vessel_hieght = $hieght;
             $this->largest_vessel_area = $k;
             $this->largest_vessel_capacity = $v;
         }
-		
+
         $this->vessel_area_volume += $k;
 	$this->vessel_area_volume_without_largest_vessel = $this->vessel_area_volume - $this->largest_vessel_area;
         return $k;
-        
-    }
-	
-	
+
+	}
+
     public function add_area_volume($type, $length, $width){
             switch ($type){
             case "Triangle":
@@ -112,15 +111,15 @@ class Calculation {
                 $vlu = $length * $width;
             }
         $this->contianment_area_volume += $vlu;
-        
+
         return $vlu;
     }
-    
+
     public function add_catch_basin_volume($length, $width, $depth){
         $this->catch_basin_area_volume += $width * $length * $depth;
          return ($width * $length * $depth);
     }
-   
+
     public function add_object_volume($length, $width){
         $this->object_basin_area_volume += $width * $length;
          return ($width * $length);
