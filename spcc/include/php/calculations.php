@@ -74,11 +74,11 @@ class Calculation {
 		}
         return number_format($vlu, 2, '.', '');
     }
-	
+
     public function calculate_vessel_area($dia, $hieght, $width = null, $shape = null){
-	
+
         $v = $this->nominal_capacity($dia, $hieght, $width);
-	       	
+
         if ($shape == "Rectangle" || $width > 0 ){
             $k = round($dia * $width);
         }else{

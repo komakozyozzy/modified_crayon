@@ -180,12 +180,12 @@ class spcc_docx_template {
                              }
                             .SPCC_Table table{
                                 border-collapse: collapse;
-                                
+
                             }
                             .SPCC_Table th{
                                 background-color:#C3C3C3;
                                 border:1px solid #000000;
-                                
+
                             }
                             .SPCC_Table td{
                                 background-color:#F3F3F3;
