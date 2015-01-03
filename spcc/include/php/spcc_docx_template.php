@@ -196,7 +196,7 @@ class FIR {
 class spcc_docx_template {
 	/**
 	 * @author Nicholas Smith
-	 * 
+	 *
 	 * @todo Get all the data for the vessel inpection table
 	 */
     private $hdrs = array('tankNum' => 'Tank Number', 'use' => 'Use of tank',
@@ -224,13 +224,13 @@ class spcc_docx_template {
                                 background-color:#F3F3F3;
                                 border:1px solid #000000;
                                 text-align:left; margin-left: auto;
-    margin-right: auto;
+    							margin-right: auto;
                                 font-size:12px;
                                 font-family:Helvetica;
                                 font-weight:bold;
                                 color:#000000;
                             }
-                           
+
                  </style>';
     // this array can be built in the logic of the inspection tables.
     public $deficiency_array = array('' => '');
