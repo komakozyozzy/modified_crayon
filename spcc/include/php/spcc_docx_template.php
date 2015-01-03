@@ -12,10 +12,13 @@ $deficiency_array = array('' => '');
 class FIR {
 	private $insp;
 	private $areas;
+	private $calc;
 	private $srow = "text-align:right;";
-	public function __construct($inspection, $area){
+	
+	public function __construct($inspection, $area, $calculations){
 		$this->insp = $inspection;
 		$this->areas = $area;
+		$this->calc = $calculations;
 	}
 	public function template($title, $data){
 
@@ -107,7 +110,9 @@ class FIR {
 			$ainfo = $area['props'];
 
 			$x = $ainfo['areaNum'];
-			
+
+			$ch = $this->calc[$area['id']]->berm_calculation;
+
 			if($ainfo['shape'] != '') {
 				$html .= $this->row(
 					'Area #'.$x.' Dimensions ',
@@ -144,33 +149,33 @@ class FIR {
 			if($ainfo['shape'] != '') {
 				$html .= $this->row(
 					'Area #'.$x.' Proposed Dimensions ',
-					$this->dimensions($ainfo['width_proposed'],$ainfo['length_proposed'],$ainfo['height_proposed']));
+					$this->dimensions($ainfo['width_proposed'],$ainfo['length_proposed'],$ch));
 			}
 
 			if($ainfo['shape_one'] != '') {
 				$html .= $this->row(
 					'Area #'.$x.' A Proposed Dimensions ',
-					$this->dimensions($ainfo['width_one_proposed'],$ainfo['length_one_proposed'],$ainfo['height_one_proposed']));
+					$this->dimensions($ainfo['width_one_proposed'],$ainfo['length_one_proposed'],$ch));
 			}
 
 			if($ainfo['shape_two'] != '') {
 				$html .= $this->row(
 					'Area #'.$x.' B Proposed Dimensions ',
-					$this->dimensions($ainfo['width_two_proposed'],$ainfo['length_two_proposed'],$ainfo['height_two_proposed']));
+					$this->dimensions($ainfo['width_two_proposed'],$ainfo['length_two_proposed'],$ch));
 			}
 
 
 			if($ainfo['shape_three'] != '') {
 				$html .= $this->row(
 					'Area #'.$x.' C Proposed Dimensions ',
-					$this->dimensions($ainfo['width_three_proposed'],$ainfo['length_three_proposed'],$ainfo['height_three_proposed']));
+					$this->dimensions($ainfo['width_three_proposed'],$ainfo['length_three_proposed'],$ch));
 			}
 
 
 			if($ainfo['shape_four'] != '') {
 				$html .= $this->row(
 					'Area #'.$x.' D Proposed Dimensions ',
-					$this->dimensions($ainfo['width_four_proposed'],$ainfo['length_four_proposed'],$ainfo['height_four_proposed']));
+					$this->dimensions($ainfo['width_four_proposed'],$ainfo['length_four_proposed'],$ch));
 			}
 
 		}
@@ -238,8 +243,8 @@ class spcc_docx_template {
      */
 
 // Vessel/Area data may need to be added as parameters 
-	public function fir($inspectionData, $areas) {
-		$fir = new FIR($inspectionData[0]['props'],$areas);
+	public function fir($inspectionData, $areas, $calc) {
+		$fir = new FIR($inspectionData[0]['props'],$areas, $calc);
 
 		$style = "width:100%;border:3px solid black;";
 		$shead = "border:3px solid black;";
