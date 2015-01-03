@@ -105,46 +105,74 @@ class FIR {
 		foreach ($this->areas as $area) {
 
 			$ainfo = $area['props'];
-			$html .= $this->row('Area #'.$x.' Berm Construction', $ainfo['berm_constructed']);
-			if($ainfo['shape_one'] != '') {
+
+			$x = $ainfo['areaNum'];
+			
+			if($ainfo['shape'] != '') {
 				$html .= $this->row(
 					'Area #'.$x.' Dimensions ',
-					$this->dimensions($ainfo['width_one'],$ainfo['length_one'],$ainfo['hieght_one']));
+					$this->dimensions($ainfo['width'],$ainfo['length'],$ainfo['height']));
+			}
+			if($ainfo['shape_one'] != '') {
 				$html .= $this->row(
-					'Area #'.$x.' Proposed Dimensions ',
-					$this->dimensions($ainfo['width_one'],$ainfo['length_one'],$ainfo['hieght_one']));
+					'Area #'.$x.' A Dimensions ',
+					$this->dimensions($ainfo['width_one'],$ainfo['length_one'],$ainfo['height_one']));
 			}
 
 			if($ainfo['shape_two'] != '') {
 				$html .= $this->row(
-					'Area #'.$x.' Dimensions ',
-					$this->dimensions($ainfo['width_two'],$ainfo['length_two'],$ainfo['hieght_two']));
-				$html .= $this->row(
-					'Area #'.$x.' Proposed Dimensions ',
-					$this->dimensions($ainfo['width_two'],$ainfo['length_two'],$ainfo['hieght_two']));
+					'Area #'.$x.' B Dimensions ',
+					$this->dimensions($ainfo['width_two'],$ainfo['length_two'],$ainfo['height_two']));
 			}
 
 
 			if($ainfo['shape_three'] != '') {
 				$html .= $this->row(
-					'Area #'.$x.' Dimensions ',
-					$this->dimensions($ainfo['width_three'],$ainfo['length_three'],$ainfo['hieght_three']));
-				$html .= $this->row(
-					'Area #'.$x.' Proposed Dimensions ',
-					$this->dimensions($ainfo['width_three'],$ainfo['length_three'],$ainfo['hieght_three']));
+					'Area #'.$x.' C Dimensions ',
+					$this->dimensions($ainfo['width_three'],$ainfo['length_three'],$ainfo['height_three']));
 			}
 
 
 			if($ainfo['shape_four'] != '') {
 				$html .= $this->row(
-					'Area #'.$x.' Dimensions ',
-					$this->dimensions($ainfo['width_four'],$ainfo['length_four'],$ainfo['hieght_four']));
-				$html .= $this->row(
-					'Area #'.$x.' Proposed Dimensions ',
-					$this->dimensions($ainfo['width_four'],$ainfo['length_four'],$ainfo['hieght_four']));
+					'Area #'.$x.' D Dimensions ',
+					$this->dimensions($ainfo['width_four'],$ainfo['length_four'],$ainfo['height_four']));
 			}
 
-			$x += 1;
+			$html .= $this->row('Area #'.$x.' Berm Construction', $ainfo['berm_constructed']);
+
+			if($ainfo['shape'] != '') {
+				$html .= $this->row(
+					'Area #'.$x.' Proposed Dimensions ',
+					$this->dimensions($ainfo['width_proposed'],$ainfo['length_proposed'],$ainfo['height_proposed']));
+			}
+
+			if($ainfo['shape_one'] != '') {
+				$html .= $this->row(
+					'Area #'.$x.' A Proposed Dimensions ',
+					$this->dimensions($ainfo['width_one_proposed'],$ainfo['length_one_proposed'],$ainfo['height_one_proposed']));
+			}
+
+			if($ainfo['shape_two'] != '') {
+				$html .= $this->row(
+					'Area #'.$x.' B Proposed Dimensions ',
+					$this->dimensions($ainfo['width_two_proposed'],$ainfo['length_two_proposed'],$ainfo['height_two_proposed']));
+			}
+
+
+			if($ainfo['shape_three'] != '') {
+				$html .= $this->row(
+					'Area #'.$x.' C Proposed Dimensions ',
+					$this->dimensions($ainfo['width_three_proposed'],$ainfo['length_three_proposed'],$ainfo['height_three_proposed']));
+			}
+
+
+			if($ainfo['shape_four'] != '') {
+				$html .= $this->row(
+					'Area #'.$x.' D Proposed Dimensions ',
+					$this->dimensions($ainfo['width_four_proposed'],$ainfo['length_four_proposed'],$ainfo['height_four_proposed']));
+			}
+
 		}
 
 		return $this->template('BERM CONDITIONS & DIMENSIONS',$html);
