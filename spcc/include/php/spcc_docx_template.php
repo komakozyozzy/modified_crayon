@@ -316,7 +316,7 @@ class spcc_docx_template {
                 $ld = $a['props']['load_dir'];
                 $m = $a['props']['berm_constructed'];
                 $l_dir = "The truck loading area is located on the $ld side of the containment area.  ";
-                $str .= "<p>Area $n$letter: $l' x $w' x $c\" and it is constructed of $m.  $l_dir </p>";
+                $str .= "<p>Area $n $letter: $l' x $w' x $c\" and it is constructed of $m.  $l_dir </p>";
             }
             $str .= '';
         }
